@@ -56,7 +56,7 @@ public class User extends JLabel implements MouseListener {
 
 
 		this.username = username;
-		this.online = online;
+		this.setOnline ( online );
 		this.selected = false;
 
 		super.setOpaque ( true );

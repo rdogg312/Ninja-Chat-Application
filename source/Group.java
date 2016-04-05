@@ -4,6 +4,7 @@ import java.io.File;
 import javax.swing.JLabel;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Random;
 
 @SuppressWarnings ( "serial" )
 public class Group extends JLabel {
@@ -16,7 +17,7 @@ public class Group extends JLabel {
 
 	private Messages messages;
 
-	private ArrayList <String> users;
+	protected ArrayList <String> users;
 
 	private boolean read;
 
@@ -30,18 +31,18 @@ public class Group extends JLabel {
 
 	private String unreadBackground;
 
-	public Group ( String name, String hash, boolean read ) {
+	public Group ( String name, String hash, ArrayList <String> users, boolean read ) {
 		super ( "" );
 		this.groupName = name;
 		this.hash = hash;
-		this.readBackground = "#6D6D6D";
-		this.unreadBackground = "#B0D35D";
+		this.readBackground = "url(file:assets/images/No-New-Message.png)";
+		this.unreadBackground = "url(file:assets/images/New-Message.png)";
 		this.selectedColor = new Color ( 0xF3F2F3 );
 		this.unSelectedColor = new Color ( 0xD3D3D3 );
 		this.selected = false;
 		this.html = this.loadHTML ( "./assets/templates/group.tpl" );
 		this.setRead ( read );
-
+		this.users = users;
 		this.messages = new Messages ();
 
 		super.setText ( this.setRead ( read ) );
@@ -114,6 +115,22 @@ public class Group extends JLabel {
 		}
 		// Return the contents of the file
 		return contents;
+	}
+
+	public static String createHash ( int length ) {
+		// Initialize a random number generator
+		Random rand = new Random ();
+		// Initialize a library string to pull from
+		String library = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		// Initialize hash string as empty string initially
+		String hash = "";
+		// Loop through n number of times, specified in the argument as the desired length
+		for ( int i = 0; i < length; i++ ) {
+			// Append a random character to the has string result
+			hash += library.charAt ( rand.nextInt ( library.length () ) );
+		}
+		// Return the resulting hash string
+		return hash;
 	}
 
 }

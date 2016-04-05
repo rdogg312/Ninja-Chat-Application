@@ -55,9 +55,8 @@ public class ChatArea extends JPanel implements ActionListener {
 		if ( event.getSource () == this.send || event.getSource () == this.textbox ) {
 			String value = this.textbox.getText ();
 			// Max 57 chars
-			if ( !value.equals ( "" ) ) {
-				this.parent.messageArea.append ( "What's up!", "Tobin", ChatArea.timestamp (), false );
-				this.parent.messageArea.append ( value, "NULL", ChatArea.timestamp (), true );
+			if ( !value.replaceAll ( "\\s+", "" ).equals ( "" ) ) {
+				this.parent.messageArea.groups.getCurrentMessages ().addMessage ( value.trim (), "NULL", ChatArea.timestamp (), true );
 				this.textbox.setText ("");
 			}
 			this.textbox.requestFocus ();

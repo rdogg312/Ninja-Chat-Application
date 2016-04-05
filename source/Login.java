@@ -42,7 +42,7 @@ public class Login extends Display implements ActionListener {
 		this.logo.setBounds ( 180, 50, 140, 140 );
 		// Create an alert box to display messages in
 		this.alert = new JLabel ("");
-		this.alert.setFont ( new Font ( "Muli", Font.PLAIN, 12 ) );
+		this.alert.setFont ( new Font ( "Muli", Font.PLAIN, 11 ) );
 		this.alert.setForeground ( new Color ( 0xD94C36 ) );
 		this.alert.setBounds ( 50, 205, 400, 20 );
 		// Create a username text field
@@ -61,6 +61,7 @@ public class Login extends Display implements ActionListener {
 		// Create a create account button
 		this.account = new Button ( "Create Account", 190, 50 );
 		this.account.setBackground ( new Color ( 0x6D6D6D ) );
+		this.account.setHighlight ( Color.WHITE, new Color ( 0x565656 ) );
 		this.account.setFont ( new Font ( "Muli", Font.PLAIN, 19 ) );
 		this.account.setPosition ( 260, 380 );
 		// Add all of the elements to the panel
@@ -84,7 +85,7 @@ public class Login extends Display implements ActionListener {
     	String pass = this.password.getPasswordString ();
     	// Check to see which button was pressed
  		if ( event.getSource () == this.login ) {
- 			new ChatApplication ();
+ 			//new ChatApplication ( "[]" );
  			this.dispose ();
  		}
  		else if ( event.getSource() == this.account ) {

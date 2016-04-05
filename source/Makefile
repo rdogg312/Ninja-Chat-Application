@@ -1,9 +1,9 @@
 main:
-	javac ./*.java
 	javac -d . ./Graphic/*.java
+	javac -cp .:assets/packages/* ./*.java
 
 run:
-	java Ninja
+	java -cp .:assets/packages/* Ninja
 
 clean:
 	rm -rf ./*.class

@@ -33,10 +33,43 @@ public class Groups extends ScrollPanel implements MouseListener {
 		super.update ();
 	}
 
+	protected Group findDuplicate ( ArrayList <String> list ) {
+		Boolean found = true;
+		for ( int i = 0; i < this.groups.size (); i++ ) {
+			Group target = this.groups.get ( i );
+			if ( target.users.size () == list.size () ) {
+				found = true;
+				for ( int j = 0; j < list.size (); j++ ) {
+					if ( !target.users.contains ( list.get ( j ) ) ) {
+						found = false;
+						break;
+					}
+				}
+				if ( found ) {
+					return target;
+				}
+			}
+		}
+		return null;
+	}
+
 	protected void setCurrentMessage ( String hash ) {
 		for ( Group group : this.groups ) {
 			if ( group.getHash ().equals ( hash ) ) {
+				String users = "";
+				String seperator = "";
+				for ( String user : group.users ) {
+					users += seperator + user;
+					seperator = ", ";
+				}
+				for ( Component component : this.parent.getComponents () ) {
+					if ( component == this.currentMessages ) {
+						this.parent.remove ( component );
+					}
+				}
 				this.currentMessages = group.setSelected ( true );
+				this.parent.add ( this.currentMessages );
+				this.parent.information.setText ( "Users: " + users );
 			}
 			else {
 				group.setSelected ( false );
@@ -48,8 +81,8 @@ public class Groups extends ScrollPanel implements MouseListener {
 		return this.currentMessages;
 	}
 
-	protected void addGroup ( String hash, String name ) {
-		Group newGroup = new Group ( name, hash, true );
+	protected void addGroup ( String name, String hash, ArrayList <String> users ) {
+		Group newGroup = new Group ( name, hash, users, true );
 		newGroup.addMouseListener ( this );
 		this.groups.add ( newGroup );
 		this.append ( newGroup );
@@ -65,8 +98,7 @@ public class Groups extends ScrollPanel implements MouseListener {
 							this.parent.remove ( component );
 						}
 					}
-
-					this.currentMessages = group.setSelected ( true );
+					this.setCurrentMessage ( group.getHash () );
 					this.parent.add ( this.currentMessages );
 					this.currentMessages.update ();
 					this.currentMessages.scrollToBottom ();

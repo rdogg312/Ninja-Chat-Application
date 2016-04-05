@@ -157,7 +157,7 @@ public class PasswordField extends JPasswordField implements FocusListener {
 		// Check to see what if the value is technically empty
 		if ( this.getPasswordString ().isEmpty () ) {
 			// Set the mask char to hide value
-			this.setEchoChar ( '●' );
+			this.setEchoChar ( '*' );
 			// Set the value to nothing and change font
 			this.setText ( "" );
 			this.setForeground ( fontColor );

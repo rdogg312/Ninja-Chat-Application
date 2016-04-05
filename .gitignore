@@ -1,0 +1,3 @@
+*.class
+source/Graphic/*.class
+source/*.class

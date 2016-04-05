@@ -18,7 +18,6 @@ public class Messages extends ScrollPanel {
         super.getContentPanel ().setBorder (
         	BorderFactory.createEmptyBorder ( 0, 0, 15, 0 )
         );
-
 	}
  
 	private String loadHTML ( String filepath ) {

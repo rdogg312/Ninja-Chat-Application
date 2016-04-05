@@ -2,8 +2,11 @@ main:
 	javac -d . ./Graphic/*.java
 	javac -cp .:assets/packages/* ./*.java
 
-run:
+client:
 	java -cp .:assets/packages/* Ninja client
+
+server:
+	java -cp .:assets/packages/* Ninja server
 
 clean:
 	rm -rf ./*.class

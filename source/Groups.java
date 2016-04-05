@@ -69,6 +69,7 @@ public class Groups extends ScrollPanel implements MouseListener {
 				}
 				this.currentMessages = group.setSelected ( true );
 				this.parent.add ( this.currentMessages );
+				this.currentMessages.scrollToBottom ();
 				this.parent.information.setText ( "Users: " + users );
 			}
 			else {

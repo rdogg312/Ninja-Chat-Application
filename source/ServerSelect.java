@@ -2,6 +2,10 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import java.util.regex.Matcher;
@@ -57,8 +61,6 @@ public class ServerSelect extends Display implements ActionListener {
 		this.port.setPosition ( 50, 380 );
 		// Create a connect button
 		this.connect = new Button ( "Connect", 190, 50 );
-		this.connect.setBackground ( new Color ( 0x6D6D6D ) );
-		this.connect.setHighlight ( Color.WHITE, new Color ( 0x565656 ) );
 		this.connect.setFont ( new Font ( "Muli", Font.PLAIN, 19 ) );
 		this.connect.setPosition ( 260, 380 );
 		// Add all of the elements to the panel
@@ -78,8 +80,35 @@ public class ServerSelect extends Display implements ActionListener {
 
 	@Override
 	public void actionPerformed ( ActionEvent event ) {
+		// Get the values of the text fields
+		String ip = this.ipAddress.getText ().replaceAll ( "\\s+", "" ).trim ();
+		String port = this.port.getText ().replaceAll ( "\\s+", "" ).trim ();
+		// Before we do anything, check that the fields are not empty
+		if ( ip.equals ( "" ) || port.equals ( "" ) ) {
+			// If any are empty, return
+			return;
+		}
 		// No need to check source, because all preform the same task
-		System.out.println ( "Connecting" );
+		try {
+			// Open connection and attempt to validate connection
+			Socket sock = new Socket ( ip, Integer.parseInt ( port ) );
+			BufferedReader input = new BufferedReader ( new InputStreamReader ( sock.getInputStream() ) );
+        	String answer = input.readLine ();
+        	// Open the login instance and close current window
+        	new Login ();
+        	this.setVisible ( false );
+        	this.dispose ();
+		}
+		catch ( Exception exception ) {
+			// Change the background color of the alert text area
+			this.alert.setForeground ( new Color ( 0xD94C36 ) );
+			// Alert user of error
+			this.alert.setText (
+				"<html>The connection to (" + ip + "," + port + ") failed, this is probably becau" +
+				"se you entered in the wrong information or the Ninja Server is not running.  Ple" +
+				"ase check credentials and that the Ninja server is running, and try again.</html>"
+			);
+		}
 	}
 
 }

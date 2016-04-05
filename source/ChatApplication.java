@@ -3,16 +3,19 @@ import org.json.simple.JSONArray;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.nio.file.Paths;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import Graphic.Display;
 import Graphic.TextField;
 import Graphic.Button;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 
 @SuppressWarnings ( "serial" )
 public class ChatApplication extends Display {
@@ -28,6 +31,7 @@ public class ChatApplication extends Display {
 	public ChatApplication ( JSONObject json ) {
 		// Run super constructor and set background color
 		super ( "Ninja - Chat Application", 700, 600 );
+		super.setDefaultCloseOperation ( JFrame.DO_NOTHING_ON_CLOSE );
 		this.panel.setBackground ( Color.WHITE );
 		// Save the users username
 		this.username = json.get ( "username" ).toString ();
@@ -45,16 +49,30 @@ public class ChatApplication extends Display {
 		this.chatArea.textbox.requestFocus ();
 		// Play opening sound effect
 		try {
-		    AudioInputStream audioInputStream =
-		        AudioSystem.getAudioInputStream(
-		            this.getClass().getResource("./assets/audio/Opening.wav"));
-		    Clip clip = AudioSystem.getClip();
-		    clip.open(audioInputStream);
-		    clip.start();
+			// Load in the audio file as a stream and play it
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream (
+					this.getClass ().getResource ( "./assets/audio/Opening.wav" )
+			);
+			Clip clip = AudioSystem.getClip ();
+			clip.open ( audioInputStream );
+			clip.start ();
 		}
-		catch ( Exception exception ) {
-			exception.printStackTrace();
-		}
+		// Catch any exception, if caught, we want to ignore this error
+		catch ( Exception exception ) {}
+		// Attach a close window listener, to logout
+		this.addWindowListener ( new WindowAdapter () {
+			public void windowClosing ( WindowEvent e ){
+				// Initialize dialog to ask user if they want to logout
+				int a = JOptionPane.showConfirmDialog ( null, "Are you sure you want to logout?" );
+				// Check if the user choose yes
+				if ( a == 0 ) {
+					// Send logout packet to server
+					System.out.println ( "Logging out..." );
+					// Exit the application
+					System.exit ( 0 );
+				}
+			}
+		});
 	}
 
 }

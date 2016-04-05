@@ -3,7 +3,7 @@ main:
 	javac -cp .:assets/packages/* ./*.java
 
 run:
-	java -cp .:assets/packages/* Ninja
+	java -cp .:assets/packages/* Ninja client
 
 clean:
 	rm -rf ./*.class

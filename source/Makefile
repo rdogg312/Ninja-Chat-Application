@@ -1,5 +1,6 @@
 main:
 	javac -d . ./Graphic/*.java
+	javac -d . ./Server/*.java
 	javac -cp .:assets/packages/* ./*.java
 
 client:

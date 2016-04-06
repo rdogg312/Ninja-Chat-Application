@@ -1,6 +1,6 @@
 main:
 	javac -d . ./Graphic/*.java
-	javac -d . ./Server/*.java
+	javac -cp .:assets/packages/* -d . ./Server/*.java
 	javac -cp .:assets/packages/* ./*.java
 
 client:
@@ -11,4 +11,5 @@ server:
 
 clean:
 	rm -rf ./*.class
-	rm ./Graphic/*.class
+	rm -rf ./Graphic/*.class
+	rm -rf ./Server/*.class

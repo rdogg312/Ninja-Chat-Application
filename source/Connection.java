@@ -235,6 +235,7 @@ public class Connection implements Runnable {
 						json.get ( "timestamp" ).toString (),
 						json.get ( "from" ).toString ().equals ( this.application.username )
 					);
+					groups.setCurrentMessage ( hash );
 					System.out.println ( "group does not exist locally" );
 				}
 

@@ -236,6 +236,18 @@ public class Connection implements Runnable {
 						json.get ( "from" ).toString ().equals ( this.application.username )
 					);
 					groups.setCurrentMessage ( hash );
+					// Play opening sound effect
+					try {
+						// Load in the audio file as a stream and play it
+						AudioInputStream audioInputStream = AudioSystem.getAudioInputStream (
+								this.getClass ().getResource ( "./assets/audio/New-Message.wav" )
+						);
+						Clip clip = AudioSystem.getClip ();
+						clip.open ( audioInputStream );
+						clip.start ();
+					}
+					// Catch any exception, if caught, we want to ignore this error
+					catch ( Exception exception ) {}
 					System.out.println ( "group does not exist locally" );
 				}
 

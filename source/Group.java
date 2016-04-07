@@ -43,7 +43,7 @@ public class Group extends JLabel {
 		this.html = this.loadHTML ( "./assets/templates/group.tpl" );
 		this.setRead ( read );
 		this.users = users;
-		this.messages = new Messages ();
+		this.messages = new Messages ( this );
 
 		super.setText ( this.setRead ( read ) );
 		super.setCursor ( new Cursor ( Cursor.HAND_CURSOR ) );
@@ -52,7 +52,7 @@ public class Group extends JLabel {
 		super.setForeground ( new Color ( 0x6D6D6D ) );
 	}
 
-	private String setRead ( boolean read ) {
+	protected String setRead ( boolean read ) {
 		// Save the read state internally
 		this.read = read;
 		// Copy the contents of the html file
@@ -94,6 +94,14 @@ public class Group extends JLabel {
 	}
 	protected Messages getMessages () {
 		return this.messages;
+	}
+
+	protected String getNames () {
+		return this.groupName;
+	}
+
+	protected ArrayList <String> getUsers () {
+		return this.users;
 	}
 
 	private String loadHTML ( String filepath ) {

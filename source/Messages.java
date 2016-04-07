@@ -10,14 +10,17 @@ import Graphic.ScrollPanel;
 public class Messages extends ScrollPanel {
 
 	protected String html;
+
+	protected Group group;
  
-	public Messages () {
+	public Messages ( Group parent ) {
 		// Create the message panel that is scrollable and set the default properties
         super ( 500, 420, BoxLayout.Y_AXIS );
         super.setPosition ( 0, 80 );
         super.getContentPanel ().setBorder (
         	BorderFactory.createEmptyBorder ( 0, 0, 15, 0 )
         );
+        this.group = parent;
 	}
  
 	private String loadHTML ( String filepath ) {

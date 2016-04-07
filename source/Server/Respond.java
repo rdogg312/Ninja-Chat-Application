@@ -6,7 +6,8 @@ import org.json.simple.parser.ParseException;
 import org.json.simple.parser.JSONParser;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * This class implements the Runnable class and it is used when the server spawns threads to handle
@@ -40,9 +41,9 @@ public class Respond implements Runnable {
 	/**
 	 * This data member initializes a Scanner string reader for reading input from the socket file
 	 * descriptor.
-	 * @var     Scanner         input               String reader for socket
+	 * @var     BufferedReader  input               Buffered string reader for socket
 	 */
-	private Scanner input;
+	private BufferedReader input;
 
 	/**
 	 * This data member initializes a printing string writer used to send a message back to the\
@@ -63,9 +64,13 @@ public class Respond implements Runnable {
 		this.connection = connection;
 		// Attempt to initialize the input and output string writers
 		try {
-			// Initialize the input and output buffers
-			this.input = new Scanner ( this.connection.getInputStream () );
-			this.output = new PrintWriter ( connection.getOutputStream () );
+			// Initialize an input buffer reader
+			this.input = new BufferedReader (
+				// Create a new instance of the input stream reader using the socket
+				new InputStreamReader ( this.connection.getInputStream () )
+			); 
+			// Initialize the output print writer
+			this.output = new PrintWriter ( this.connection.getOutputStream (), true );
 		}
 		// Seriously, this shouldn't fail...
 		catch ( Exception exception ) {}
@@ -78,24 +83,20 @@ public class Respond implements Runnable {
 	 * @return  String                              The read input string from client socket
 	 */
 	private String read () {
-		// Attempt to read the socket
+		// Try to read from the socket
 		try {
-			// Initialize the string and the integer based character variable
-			String output = "";
-			int character;
-			// Loop until -1 is returned
-			while ( ( character = this.connection.getInputStream ().read () ) != -1 ) {
-				// Append casted character to the string
-				output += ( char ) character;
-			}
-			// Return the string
-			return output;
-		}
-		// If any exceptions are thrown
-		catch ( Exception exception ) {
-			// Return null to notify error
-			return null;
-		}
+			// Initialize request string to the input
+			String request;
+			// Loop until value is not null
+			while ( ( request = this.input.readLine () ) == null ) {}
+	    	// Return the result
+	        return request;
+	    }
+	    // Catch the exception if one is thrown
+	    catch ( Exception exception ) {
+	    	// Return null is it was a failure
+	    	return null;
+	    }
 	}
 
 	/**
@@ -107,7 +108,6 @@ public class Respond implements Runnable {
 	protected void write ( String response ) {
 		// Write string to print writer
 		this.output.println ( response );
-		// Flush buffer and clear
 		this.output.flush ();
 	}
 
@@ -132,7 +132,6 @@ public class Respond implements Runnable {
 		// If the disconnect flag is true
 		if ( disconnect ) {
 			// Try to close connection
-			System.out.println("REMOVE THAT SHIIITT");
 			try {
 				// Close the connection
 				this.connection.close ();
@@ -175,39 +174,38 @@ public class Respond implements Runnable {
 	 * @return  void
 	 */
 	public void run () {
-		// Parse the request that was given
-		JSONObject request = this.parse ( this.read () );
-		// If the request is valid JSON
-		if ( request != null ) {
-			// Make sure we have a type in our json object
-			if ( request.get ( "type" ) != null ) {
-				// If the type of request is a login
-				if ( request.get ( "type" ).equals ( "login" ) ) {
-					this.parent.handler.handleLogin ( this, request );
+		// Loop forever, reading
+		while ( true ) {
+			// Parse the request that was given
+			JSONObject request = this.parse ( this.read () );
+			// If the request is valid JSON
+			if ( request != null ) {
+				// Make sure we have a type in our json object
+				if ( request.get ( "type" ) != null ) {
+					// If the type of request is a login
+					if ( request.get ( "type" ).equals ( "login" ) ) {
+						this.parent.handler.handleLogin ( this, request );
+					}
+					// If the type of request is a create account request
+					else if ( request.get ( "type" ).equals ( "create" ) ) {
+						this.parent.handler.handleCreate ( this, request );
+					}
+					// If the type of request is a message push request
+					else if ( request.get ( "type" ).equals ( "message" ) ) {
+						this.parent.handler.handleMessage ( this, request );
+					}
+					// If the type of request is a logout request
+					else if ( request.get ( "type" ).equals ( "logout" ) ) {
+						this.parent.handler.handleLogout ( this, request );
+					}
+					// Otherwise, handle default case
+					else {
+						// If it was no of the former request types, then close the connection
+						this.removeConnection ( true );
+					}
 				}
-				// If the type of request is a create account request
-				else if ( request.get ( "type" ).equals ( "create" ) ) {
-					this.parent.handler.handleCreate ( this, request );
-				}
-				// If the type of request is a message push request
-				else if ( request.get ( "type" ).equals ( "message" ) ) {
-					this.parent.handler.handleMessage ( this, request );
-				}
-				// If the type of request is a logout request
-				else if ( request.get ( "type" ).equals ( "logout" ) ) {
-					this.parent.handler.handleLogout ( this, request );
-				}
-				// Otherwise, handle default case
-				else {
-					// If it was no of the former request types, then close the connection
-					this.removeConnection ( true );
-				}
-				// Return and don't hit the remove connection request
-				return;
 			}
 		}
-		// Remove the connection from the list
-		this.removeConnection ( true );
 	}
 
 }

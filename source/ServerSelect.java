@@ -2,9 +2,8 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
+import java.io.PrintWriter;
+import java.util.Scanner;
 import java.net.Socket;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -23,13 +22,13 @@ public class ServerSelect extends Display implements ActionListener {
 
 	private JLabel logo;
 
-	private JLabel alert;
+	protected JLabel alert;
 
-	private TextField ipAddress;
+	protected TextField ipAddress;
 
-	private TextField port;
+	protected TextField port;
 
-	private Button connect;
+	protected Button connect;
 
 	/**
 	 * 
@@ -90,14 +89,15 @@ public class ServerSelect extends Display implements ActionListener {
 		}
 		// No need to check source, because all preform the same task
 		try {
-			// Open connection and attempt to validate connection
-			Socket sock = new Socket ( ip, Integer.parseInt ( port ) );
-			BufferedReader input = new BufferedReader ( new InputStreamReader ( sock.getInputStream() ) );
-        	String answer = input.readLine ();
-        	// Open the login instance and close current window
-        	new Login ();
-        	this.setVisible ( false );
-        	this.dispose ();
+			// Create a new connection to the passed server
+			Connection connection = new Connection ( this, ip, Integer.parseInt ( port ) );
+			// Create a listener thread
+			Thread thread = new Thread ( connection );
+			thread.start ();
+			// Send in login packet to try to see if it is a Ninja server
+			connection.send (
+				"{\"type\":\"login\",\"username\":\"\",\"password\":\"\",\"public_key\":\"\"}"
+			);
 		}
 		catch ( Exception exception ) {
 			// Change the background color of the alert text area

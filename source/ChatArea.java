@@ -1,3 +1,5 @@
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
@@ -6,6 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import Graphic.Button;
 import Graphic.TextField;
@@ -56,7 +59,29 @@ public class ChatArea extends JPanel implements ActionListener {
 			String value = this.textbox.getText ();
 			// Max 57 chars
 			if ( !value.replaceAll ( "\\s+", "" ).equals ( "" ) ) {
-				this.parent.messageArea.groups.getCurrentMessages ().addMessage ( value.trim (), "NULL", ChatArea.timestamp (), true );
+				// Collect information
+				String name = this.parent.messageArea.groups.getCurrentMessages ().group.getNames ();
+				String hash = this.parent.messageArea.groups.getCurrentMessages ().group.getHash ();
+				ArrayList <String> users = this.parent.messageArea.groups.getCurrentMessages ().group.getUsers ();
+				// Create a JSON array of users
+				JSONArray usersArray = new JSONArray ();
+				// Populate the users JSON array
+				for ( String user : users ) {
+					// Add string to JSON array
+					usersArray.add ( user );
+				}
+				// Create the message JSON string
+				JSONObject json = new JSONObject ();
+				json.put ( "type", "message" );
+				json.put ( "name", name );
+				json.put ( "hash", hash );
+				json.put ( "users", usersArray );
+				json.put ( "from", this.parent.username );
+				json.put ( "timestamp", ChatArea.timestamp () );
+				json.put ( "message", value.trim () );
+				// Send the json message to the server
+				this.parent.connection.send ( json.toString () );
+				// Set the message text-box to be empty
 				this.textbox.setText ("");
 			}
 			this.textbox.requestFocus ();

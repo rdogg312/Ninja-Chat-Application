@@ -51,7 +51,12 @@ public class Handler {
 			// Add user connection to logged in array list
 			this.parent.addClient ( username, callback );
 			// Write a response back to client
-			callback.write ( this.successLogin ( "login", username ).toString () );
+			
+			callback.write ( "{\"type\":\"login\",\"status\":\"success\",\"public_key\":\"SERVER_KEY\",\"username\":\"NULL\",\"users\":[{\"username\":\"NULL\",\"online\":true},{\"username\":\"BennyS\",\"online\":true},{\"username\":\"TheHolyBeast\",\"online\":false},{\"username\":\"HypeBeast\",\"online\":false},{\"username\":\"Clouds\",\"online\":false},{\"username\":\"TamerS\",\"online\":false}],\"groups\":[{\"name\":\"Everybody\",\"hash\":\"0\",\"users\":[\"NULL\",\"BennyS\",\"TheHolyBeast\"],\"messages\":[{\"from\":\"TheHolyBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Hey!\"},{\"from\":\"Clouds\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What up!\"},{\"from\":\"TamerS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"@Unemployeed\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Ayyyye!\"},{\"from\":\"HypeBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What's Happening!\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:23:53\",\"message\":\"Hey what's up guys!\"}]},{\"name\":\"CS342\",\"hash\":\"SFVG67RE6GVS8SHCA7SCGDHSKAFIUFDSHAOW\",\"users\":[\"NULL\",\"BennyS\"],\"messages\":[{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:27:22\",\"message\":\"What up Ben!\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yo is the GUI done yet?\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yes ;)\"}]}]}" );
+			this.parent.sendAllClients ( "{\"type\":\"online\",\"username\":\"" + username + "\"}" );
+			return;
+
+			// callback.write ( this.successLogin ( "login", username ).toString () );
 		}
 		else {
 			callback.write ( this.failTemplate ( "login", "Failed to login!" ).toString () );
@@ -74,8 +79,13 @@ public class Handler {
 		if ( users_db.userAdd ( username, password ) ) {
 			// Add user connection to logged in array list
 			this.parent.addClient ( username, callback );
+
+			callback.write ( "{\"type\":\"login\",\"status\":\"success\",\"public_key\":\"SERVER_KEY\",\"username\":\"NULL\",\"users\":[{\"username\":\"NULL\",\"online\":true},{\"username\":\"BennyS\",\"online\":true},{\"username\":\"TheHolyBeast\",\"online\":false},{\"username\":\"HypeBeast\",\"online\":false},{\"username\":\"Clouds\",\"online\":false},{\"username\":\"TamerS\",\"online\":false}],\"groups\":[{\"name\":\"Everybody\",\"hash\":\"0\",\"users\":[\"NULL\",\"BennyS\",\"TheHolyBeast\"],\"messages\":[{\"from\":\"TheHolyBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Hey!\"},{\"from\":\"Clouds\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What up!\"},{\"from\":\"TamerS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"@Unemployeed\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Ayyyye!\"},{\"from\":\"HypeBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What's Happening!\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:23:53\",\"message\":\"Hey what's up guys!\"}]},{\"name\":\"CS342\",\"hash\":\"SFVG67RE6GVS8SHCA7SCGDHSKAFIUFDSHAOW\",\"users\":[\"NULL\",\"BennyS\"],\"messages\":[{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:27:22\",\"message\":\"What up Ben!\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yo is the GUI done yet?\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yes ;)\"}]}]}" );
+			this.parent.sendAllClients ( "{\"type\":\"online\",\"username\":\"" + username + "\"}" );
+			return;
+
 			// Send response to user
-			callback.write ( this.successLogin ( "create", username ).toString () );
+			//callback.write ( this.successLogin ( "create", username ).toString () );
 		}
 		// Otherwise, we failed
 		else {
@@ -94,7 +104,14 @@ public class Handler {
 	 */
 	protected void handleMessage ( Respond callback, JSONObject request ) {
 		System.out.println ( "[MESSAGE]\t" + request.toString () );
-		callback.write ( this.failTemplate ( "message", "Failed to send message!" ).toString () );
+		// try {
+		//     Thread.sleep(2000);
+		// } catch(InterruptedException ex) {
+		//     Thread.currentThread().interrupt();
+		// }
+		// request.put ( "hash", "other234" );
+		// request.put ( "name", "new group" );
+		this.parent.sendAllClients ( request.toString () );
 	}
 
 	/**

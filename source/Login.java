@@ -21,25 +21,29 @@ import Graphic.Button;
 @SuppressWarnings ( "serial" )
 public class Login extends Display implements ActionListener {
 
+	private Connection connection;
+
 	private JLabel logo;
 
-	private JLabel alert;
+	protected JLabel alert;
 
-	private TextField username;
+	protected TextField username;
 
-	private PasswordField password;
+	protected PasswordField password;
 
-	private Button login;
+	protected Button login;
 
-	private Button account;
+	protected Button account;
 
 	/**
 	 * 
 	 */
-	public Login () {
+	public Login ( Connection connection ) {
 		// Run the super constructor and color background
 		super ( "Ninja - Account Login", 500, 500 );
 		this.panel.setBackground ( new Color ( 0xF3F2F3 ) );
+		// Save the connection handle
+		this.connection = connection;
 		// Create the logo
 		this.logo = new JLabel ( "" );
 		this.logo.setIcon ( new ImageIcon ( "./assets/images/Logo.png" ) );
@@ -77,6 +81,7 @@ public class Login extends Display implements ActionListener {
 		this.panel.add ( this.password );
 		// Bind buttons to the action listener
 		login.addActionListener ( this );
+		password.addActionListener ( this );
 		account.addActionListener ( this );
 		// Render the frame
 		super.render ();
@@ -88,27 +93,20 @@ public class Login extends Display implements ActionListener {
     	String user = this.username.getText ();
     	String pass = this.password.getPasswordString ();
     	// Check to see which button was pressed
- 		if ( event.getSource () == this.login ) {
-	        // Fake json for testing
-			String json = "{\"type\":\"login\",\"status\":\"success\",\"public_key\":\"SERVER_KEY\",\"username\":\"NULL\",\"users\":[{\"username\":\"NULL\",\"online\":true},{\"username\":\"BennyS\",\"online\":true},{\"username\":\"TheHolyBeast\",\"online\":false},{\"username\":\"HypeBeast\",\"online\":false},{\"username\":\"Clouds\",\"online\":false},{\"username\":\"TamerS\",\"online\":false}],\"groups\":[{\"name\":\"Everybody\",\"hash\":\"0\",\"users\":[\"NULL\",\"BennyS\",\"TheHolyBeast\"],\"messages\":[{\"from\":\"TheHolyBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Hey!\"},{\"from\":\"Clouds\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What up!\"},{\"from\":\"TamerS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"@Unemployeed\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Ayyyye!\"},{\"from\":\"HypeBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What's Happening!\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:23:53\",\"message\":\"Hey what's up guys!\"}]},{\"name\":\"CS342\",\"hash\":\"SFVG67RE6GVS8SHCA7SCGDHSKAFIUFDSHAOW\",\"users\":[\"NULL\",\"BennyS\"],\"messages\":[{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:27:22\",\"message\":\"What up Ben!\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yo is the GUI done yet?\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yes ;)\"}]}]}";
-			// Initialize json parser
-			JSONParser parser = new JSONParser ();
-			// Try to parse the json string
-			try {
-				// Parse and cast as a JSON object
-	        	JSONObject object = ( JSONObject ) parser.parse ( json );
-	        	// Pass the json object to the chat application constructor
-	            new ChatApplication ( object );
-	        }
-	        // Attempt to catch any parse exceptions
-	        catch ( ParseException exception ) {
-	     		// Print error and exit
-	        	System.out.println ( exception.toString () );
-	        	System.exit ( 0 );
-	        }
-	        // Close this window frame
-	        this.setVisible ( false );
- 			this.dispose ();
+ 		if ( event.getSource () == this.login || event.getSource () == this.password ) {
+ 			// Disable the GUI components
+			this.username.setEnabled ( false );
+			this.password.setEnabled ( false );
+			this.account.setEnabled ( false );
+			this.login.setEnabled ( false );
+ 			// Create a login JSON object
+	        JSONObject json = new JSONObject ();
+	        json.put ( "type", "login" );
+	        json.put ( "username", user );
+	        json.put ( "password", pass );
+	        json.put ( "public_key", "" );
+	        // Send it to the server
+	        this.connection.send ( json.toString () );
  		}
  		else if ( event.getSource() == this.account ) {
 	    	// Create patterns for username and password
@@ -118,8 +116,19 @@ public class Login extends Display implements ActionListener {
 	    	if ( userPattern.matcher ( user ).find () && user.length () > 2 && user.length () < 17 ) {
 	    		// Next check to see if a valid password was passed
 	    		if ( passPattern.matcher ( pass ).find () && pass.length () > 2 && pass.length () < 17 ) {
-	    			// Finally we can create the account
-	    			this.alert.setText ("Account successfully created!");
+	    			// Finally we can create the account, disable the GUI components
+					this.username.setEnabled ( false );
+					this.password.setEnabled ( false );
+					this.account.setEnabled ( false );
+					this.login.setEnabled ( false );
+		 			// Create a login JSON object
+			        JSONObject json = new JSONObject ();
+			        json.put ( "type", "create" );
+			        json.put ( "username", user );
+			        json.put ( "password", pass );
+			        json.put ( "public_key", "" );
+			        // Send it to the server
+			        this.connection.send ( json.toString () );
 	    			// Return without displaying errors
 	    			return;
 	    		}

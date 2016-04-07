@@ -78,15 +78,25 @@ public class Groups extends ScrollPanel implements MouseListener {
 		}
 	}
 
+	protected Group getGroupByHash ( String hash ) {
+		for ( Group group : this.groups ) {
+			if ( group.getHash ().equals ( hash ) ) {
+				return group;
+			}
+		}
+		return null;
+	}
+
 	protected Messages getCurrentMessages () {
 		return this.currentMessages;
 	}
 
-	protected void addGroup ( String name, String hash, ArrayList <String> users ) {
+	protected Group addGroup ( String name, String hash, ArrayList <String> users ) {
 		Group newGroup = new Group ( name, hash, users, true );
 		newGroup.addMouseListener ( this );
 		this.groups.add ( newGroup );
 		this.append ( newGroup );
+		return newGroup;
 	}
 
 	public void mouseClicked ( MouseEvent event ) {

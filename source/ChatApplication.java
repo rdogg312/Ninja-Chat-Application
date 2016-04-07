@@ -20,6 +20,8 @@ import Graphic.Button;
 @SuppressWarnings ( "serial" )
 public class ChatApplication extends Display {
 
+	protected Connection connection;
+
 	protected MessageArea messageArea;
 
 	protected ChatArea chatArea;
@@ -28,11 +30,13 @@ public class ChatApplication extends Display {
 
 	protected String username;
 
-	public ChatApplication ( JSONObject json ) {
+	public ChatApplication ( Connection connection, JSONObject json ) {
 		// Run super constructor and set background color
 		super ( "Ninja - Chat Application", 700, 600 );
 		super.setDefaultCloseOperation ( JFrame.DO_NOTHING_ON_CLOSE );
 		this.panel.setBackground ( Color.WHITE );
+		// Save the connection thread reference
+		this.connection = connection;
 		// Save the users username
 		this.username = json.get ( "username" ).toString ();
 		// Create all the panels
@@ -61,13 +65,18 @@ public class ChatApplication extends Display {
 		catch ( Exception exception ) {}
 		// Attach a close window listener, to logout
 		this.addWindowListener ( new WindowAdapter () {
+			// Define the anonymous window closing window adapter function
 			public void windowClosing ( WindowEvent e ){
 				// Initialize dialog to ask user if they want to logout
 				int a = JOptionPane.showConfirmDialog ( null, "Are you sure you want to logout?" );
 				// Check if the user choose yes
 				if ( a == 0 ) {
-					// Send logout packet to server
-					System.out.println ( "Logging out..." );
+					// // Construct logout packet
+					// JSONObject json = new JSONObject ();
+					// json.put ( "type", "logout" );
+					// json.put ( "username", this.username );
+					// // Send logout packet to server
+					// this.connection.send ( json.toString () );
 					// Exit the application
 					System.exit ( 0 );
 				}

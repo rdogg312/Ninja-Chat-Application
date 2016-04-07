@@ -250,8 +250,11 @@ public class Connection implements Runnable {
 					catch ( Exception exception ) {}
 					System.out.println ( "group does not exist locally" );
 				}
+			}
+			else if ( type.equals ( "online" ) ) {
 
-
+			}
+			else if ( type.equals ( "created" ) ) {
 				
 			}
 		}

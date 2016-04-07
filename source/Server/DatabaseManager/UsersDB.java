@@ -16,16 +16,13 @@ import java.lang.StringBuilder;
 
 public class UsersDB {
 
-	// @param 	String 		filepath 		"../assets/databases/users/user.db"
 	protected  	static 	ArrayList<User> 	USERS;
-	private		static 	String 				FILEPATH;
+	private		static final String FILEPATH = "../../assets/databases/users/user.db";
 
-	public UsersDB ( String filepath ) {
+	public UsersDB () {
 		// Does path folder and users.db file exist?
-		FILEPATH = filepath;
 		USERS = new ArrayList<User>();
-
-		if(!createFileAndPath(filepath))
+		if(!createFileAndPath(FILEPATH))
 			//read all the contents and store internally (Username,password_hash)
 			load();
 	}

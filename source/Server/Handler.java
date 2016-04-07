@@ -47,51 +47,46 @@ public class Handler {
 		String username = request.get("username").toString();
 		String password = request.get("password").toString();
 
-		if(users_db.userLogin(username, password))
-			callback.write ( this.success("login", username).toString());
-		else
-			callback.write ( this.failTemplate ( "login", "Failed to login!" ).toString () );
-		// callback.write ( this.parent.clientsOnline ().toString () );
-	}
-
-	protected JSONObject success(String type, String username)
-	{
-		JSONObject result = new JSONObject();
-
-		result.put("type", type);
-		result.put("status", "success");
-		result.put("username", username);
-
-		JSONArray users = new JSONArray();
-
-		for(User x : users_db.USERS)
-		{
-			if(!x.getUsername().equals(username))
-			{
-				JSONObject user = new JSONObject();
-
-				String other_user = x.getUsername();
-
-				user.put("username", other_user);
-
-				if(parent.findClient(other_user) == null)
-					user.put("online", false);
-				else
-					user.put("online", true);
-
-				users.add(user);
-			}
+		if(users_db.userLogin(username, password)) {
+			// Add user connection to logged in array list
+			this.parent.addClient ( username, callback );
+			// Write a response back to client
+			callback.write ( this.successLogin ( "login", username ).toString () );
 		}
-		result.put("users", users);
-		return result;
+		else {
+			callback.write ( this.failTemplate ( "login", "Failed to login!" ).toString () );
+		}
+		// Send everyone a message saying that you logged in
+		this.parent.sendAllClients ( "{\"type\":\"online\",\"username\":\"" + username + "\"}" );
 	}
 
 	/**
 	 *
 	 */
 	protected void handleCreate ( Respond callback, JSONObject request ) {
+
 		System.out.println ( "[CREATE]\t\t" + request.toString () );
-		callback.write ( this.failTemplate ( "create", "Failed to create account!" ).toString () );
+
+		// Get the username and password
+		String username = request.get ( "username" ).toString ();
+		String password = request.get ( "password" ).toString ();
+		// Check to see if we successfully created a user
+		if ( users_db.userAdd ( username, password ) ) {
+			// Add user connection to logged in array list
+			this.parent.addClient ( username, callback );
+			// Send response to user
+			callback.write ( this.successLogin ( "create", username ).toString () );
+		}
+		// Otherwise, we failed
+		else {
+			// Send failed JSON message
+			callback.write (
+				// Create a template using the fail template generator
+				this.failTemplate ( "create", "Failed to create account!" ).toString ()
+			);
+		}
+		// Send everyone a message saying that you logged in
+		this.parent.sendAllClients ( "{\"type\":\"online\",\"username\":\"" + username + "\"}" );
 	}
 
 	/**
@@ -107,7 +102,42 @@ public class Handler {
 	 */
 	protected void handleLogout ( Respond callback, JSONObject request ) {
 		System.out.println ( "[LOGOUT]\t\t" + request.toString () );
-		callback.write ( this.failTemplate ( "logout", "Failed to logout!" ).toString () );
+		// Remove user connection from logged in client array list
+		this.parent.removeClient ( request.get ( "username" ).toString () );
+
+		callback.write ( this.parent.clientsOnline ().toString () );
+	}
+
+	/**
+	 * 
+	 */
+	protected JSONObject successLogin ( String type, String username )
+	{
+		JSONObject result = new JSONObject();
+
+		result.put("type", type);
+		result.put("status", "success");
+		result.put("username", username);
+
+		JSONArray users = new JSONArray();
+
+		for(User x : users_db.USERS)
+		{
+				JSONObject user = new JSONObject();
+
+				String other_user = x.getUsername();
+
+				user.put("username", other_user);
+
+				if(parent.findClient(other_user) == null)
+					user.put("online", false);
+				else
+					user.put("online", true);
+
+				users.add(user);
+		}
+		result.put("users", users);
+		return result;
 	}
 
 	/**

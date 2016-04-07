@@ -20,15 +20,20 @@ public class UsersDB {
 
 	// @param 	String 		filepath 		"../assets/databases/users/user.db"
 	protected  	static 	ArrayList<User> 	USERS;
-	private		static 	final 	String 		FILEPATH = "../assets/databases/users/user.db";
+	private		static 	final 	String 		FILEPATH = "./assets/databases/users/user.db";
 
 	public UsersDB () {
 		// Does path folder and users.db file exist?
 		USERS = new ArrayList<User>();
 
-		if(!createFileAndPath())
+		if(!createFileAndPath()) {
+			System.out.println ( "GUCCI" );
 			//read all the contents and store internally (Username,password_hash)
 			load();
+		}
+		else {
+			System.out.println ("FAILED");
+		}
 	}
 
 	protected static boolean createFileAndPath()
@@ -98,8 +103,8 @@ public class UsersDB {
 		return false;
 	}
 
-	private void update (String username, String password_hash) {
-		// Converts internal datastructure back into file format and saves it back in
+	private synchronized void update (String username, String password_hash) {
+		// Converts internal data structure back into file format and saves it back in
 
 		FileWriter fileWriter = null;
 		BufferedWriter buffWriter = null;
@@ -124,7 +129,7 @@ public class UsersDB {
 		}
 	}
 
-	private void load()
+	private synchronized void load()
 	{
 		// Load file content to internal datastructure
 		try

@@ -99,8 +99,11 @@ public class Server {
 	 * @return  void
 	 */
 	protected void addClient ( String username, Respond connection ) {
-		// Bind the username and connection together and append to the clients array list
-		this.clients.add ( new Tuple ( username, connection ) );
+		// Check that the user is already not in the clients array
+		if ( this.findClient ( username ) == null ) {
+			// Bind the username and connection together and append to the clients array list
+			this.clients.add ( new Tuple ( username, connection ) );
+		}
 	}
 
 	/**

@@ -132,6 +132,7 @@ public class Respond implements Runnable {
 		// If the disconnect flag is true
 		if ( disconnect ) {
 			// Try to close connection
+			System.out.println("REMOVE THAT SHIIITT");
 			try {
 				// Close the connection
 				this.connection.close ();

@@ -25,6 +25,8 @@ public class Handler {
 	 */
 	private Server parent;
 
+	private UsersDB 	users_db;
+
 	/**
 	 * This constructor simply saves the parent reference and thats all it does.  It also
 	 * initializes the data base instances.
@@ -33,6 +35,7 @@ public class Handler {
 	public Handler ( Server parent ) {
 		// Save the parent reference internally
 		this.parent = parent;
+		this.users_db = new UsersDB();
 	}
 
 	/**
@@ -40,8 +43,47 @@ public class Handler {
 	 */
 	protected void handleLogin ( Respond callback, JSONObject request ) {
 		System.out.println ( "[LOGIN]\t\t" + request.toString () );
-		callback.write ( this.failTemplate ( "login", "Failed to login!" ).toString () );
+
+		String username = request.get("username").toString();
+		String password = request.get("password").toString();
+
+		if(users_db.userLogin(username, password))
+			callback.write ( this.success("login", username).toString());
+		else
+			callback.write ( this.failTemplate ( "login", "Failed to login!" ).toString () );
 		// callback.write ( this.parent.clientsOnline ().toString () );
+	}
+
+	protected JSONObject success(String type, String username)
+	{
+		JSONObject result = new JSONObject();
+
+		result.put("type", type);
+		result.put("status", "success");
+		result.put("username", username);
+
+		JSONArray users = new JSONArray();
+
+		for(User x : users_db.USERS)
+		{
+			if(!x.getUsername().equals(username))
+			{
+				JSONObject user = new JSONObject();
+
+				String other_user = x.getUsername();
+
+				user.put("username", other_user);
+
+				if(parent.findClient(other_user) == null)
+					user.put("online", false);
+				else
+					user.put("online", true);
+
+				users.add(user);
+			}
+		}
+		result.put("users", users);
+		return result;
 	}
 
 	/**

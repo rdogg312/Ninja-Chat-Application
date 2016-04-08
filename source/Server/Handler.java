@@ -46,23 +46,24 @@ public class Handler {
 
 		String username = request.get("username").toString();
 		String password = request.get("password").toString();
+		JSONArray groups = GroupDB.getGroups(username);
 
 		if(users_db.userLogin(username, password)) {
 			// Add user connection to logged in array list
 			this.parent.addClient ( username, callback );
 			// Write a response back to client
 			
-			callback.write ( "{\"type\":\"login\",\"status\":\"success\",\"public_key\":\"SERVER_KEY\",\"username\":\"NULL\",\"users\":[{\"username\":\"NULL\",\"online\":true},{\"username\":\"BennyS\",\"online\":true},{\"username\":\"TheHolyBeast\",\"online\":false},{\"username\":\"HypeBeast\",\"online\":false},{\"username\":\"Clouds\",\"online\":false},{\"username\":\"TamerS\",\"online\":false}],\"groups\":[{\"name\":\"Everybody\",\"hash\":\"0\",\"users\":[\"NULL\",\"BennyS\",\"TheHolyBeast\"],\"messages\":[{\"from\":\"TheHolyBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Hey!\"},{\"from\":\"Clouds\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What up!\"},{\"from\":\"TamerS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"@Unemployeed\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Ayyyye!\"},{\"from\":\"HypeBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What's Happening!\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:23:53\",\"message\":\"Hey what's up guys!\"}]},{\"name\":\"CS342\",\"hash\":\"SFVG67RE6GVS8SHCA7SCGDHSKAFIUFDSHAOW\",\"users\":[\"NULL\",\"BennyS\"],\"messages\":[{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:27:22\",\"message\":\"What up Ben!\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yo is the GUI done yet?\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yes ;)\"}]}]}" );
-			this.parent.sendAllClients ( "{\"type\":\"online\",\"username\":\"" + username + "\"}" );
-			return;
+			// callback.write ( "{\"type\":\"login\",\"status\":\"success\",\"public_key\":\"SERVER_KEY\",\"username\":\"NULL\",\"users\":[{\"username\":\"NULL\",\"online\":true},{\"username\":\"BennyS\",\"online\":true},{\"username\":\"TheHolyBeast\",\"online\":false},{\"username\":\"HypeBeast\",\"online\":false},{\"username\":\"Clouds\",\"online\":false},{\"username\":\"TamerS\",\"online\":false}],\"groups\":[{\"name\":\"Everybody\",\"hash\":\"0\",\"users\":[\"NULL\",\"BennyS\",\"TheHolyBeast\"],\"messages\":[{\"from\":\"TheHolyBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Hey!\"},{\"from\":\"Clouds\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What up!\"},{\"from\":\"TamerS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"@Unemployeed\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Ayyyye!\"},{\"from\":\"HypeBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What's Happening!\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:23:53\",\"message\":\"Hey what's up guys!\"}]},{\"name\":\"CS342\",\"hash\":\"SFVG67RE6GVS8SHCA7SCGDHSKAFIUFDSHAOW\",\"users\":[\"NULL\",\"BennyS\"],\"messages\":[{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:27:22\",\"message\":\"What up Ben!\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yo is the GUI done yet?\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yes ;)\"}]}]}" );
+			// this.parent.sendAllClients ( "{\"type\":\"online\",\"username\":\"" + username + "\"}" );
+			// return;
 
-			// callback.write ( this.successLogin ( "login", username ).toString () );
+			callback.write ( this.successSync ( "login", username ).toString () );
 		}
 		else {
-			callback.write ( this.failTemplate ( "login", "Failed to login!" ).toString () );
+			callback.write ( this.failTemplate ( "login", "Failed to login! Username doesn't exist and/or wrong password!" ).toString () );
 		}
 		// Send everyone a message saying that you logged in
-		this.parent.sendAllClients ( "{\"type\":\"online\",\"username\":\"" + username + "\"}" );
+		this.parent.sendAllClients ( successToAll("online", username) );
 	}
 
 	/**
@@ -75,28 +76,30 @@ public class Handler {
 		// Get the username and password
 		String username = request.get ( "username" ).toString ();
 		String password = request.get ( "password" ).toString ();
+		JSONArray groups = GroupDB.getGroups(username);
 		// Check to see if we successfully created a user
 		if ( users_db.userAdd ( username, password ) ) {
 			// Add user connection to logged in array list
 			this.parent.addClient ( username, callback );
 
-			callback.write ( "{\"type\":\"login\",\"status\":\"success\",\"public_key\":\"SERVER_KEY\",\"username\":\"NULL\",\"users\":[{\"username\":\"NULL\",\"online\":true},{\"username\":\"BennyS\",\"online\":true},{\"username\":\"TheHolyBeast\",\"online\":false},{\"username\":\"HypeBeast\",\"online\":false},{\"username\":\"Clouds\",\"online\":false},{\"username\":\"TamerS\",\"online\":false}],\"groups\":[{\"name\":\"Everybody\",\"hash\":\"0\",\"users\":[\"NULL\",\"BennyS\",\"TheHolyBeast\"],\"messages\":[{\"from\":\"TheHolyBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Hey!\"},{\"from\":\"Clouds\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What up!\"},{\"from\":\"TamerS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"@Unemployeed\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Ayyyye!\"},{\"from\":\"HypeBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What's Happening!\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:23:53\",\"message\":\"Hey what's up guys!\"}]},{\"name\":\"CS342\",\"hash\":\"SFVG67RE6GVS8SHCA7SCGDHSKAFIUFDSHAOW\",\"users\":[\"NULL\",\"BennyS\"],\"messages\":[{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:27:22\",\"message\":\"What up Ben!\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yo is the GUI done yet?\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yes ;)\"}]}]}" );
-			this.parent.sendAllClients ( "{\"type\":\"created\",\"username\":\"" + username + "\"}" );
-			return;
+			// callback.write ( "{\"type\":\"login\",\"status\":\"success\",\"public_key\":\"SERVER_KEY\",\"username\":\"NULL\",\"users\":[{\"username\":\"NULL\",\"online\":true},{\"username\":\"BennyS\",\"online\":true},{\"username\":\"TheHolyBeast\",\"online\":false},{\"username\":\"HypeBeast\",\"online\":false},{\"username\":\"Clouds\",\"online\":false},{\"username\":\"TamerS\",\"online\":false}],\"groups\":[{\"name\":\"Everybody\",\"hash\":\"0\",\"users\":[\"NULL\",\"BennyS\",\"TheHolyBeast\"],\"messages\":[{\"from\":\"TheHolyBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Hey!\"},{\"from\":\"Clouds\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What up!\"},{\"from\":\"TamerS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"@Unemployeed\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Ayyyye!\"},{\"from\":\"HypeBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What's Happening!\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:23:53\",\"message\":\"Hey what's up guys!\"}]},{\"name\":\"CS342\",\"hash\":\"SFVG67RE6GVS8SHCA7SCGDHSKAFIUFDSHAOW\",\"users\":[\"NULL\",\"BennyS\"],\"messages\":[{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:27:22\",\"message\":\"What up Ben!\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yo is the GUI done yet?\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yes ;)\"}]}]}" );
+			// this.parent.sendAllClients ( "{\"type\":\"created\",\"username\":\"" + username + "\"}" );
+			// return;
 
 			// Send response to user
-			//callback.write ( this.successLogin ( "create", username ).toString () );
+			callback.write ( this.successSync ( "create", username, groups).toString () );
 		}
 		// Otherwise, we failed
 		else {
 			// Send failed JSON message
 			callback.write (
 				// Create a template using the fail template generator
-				this.failTemplate ( "create", "Failed to create account!" ).toString ()
+				this.failTemplate ( "create", "Failed to create account! User already exists.\n" +
+					"Try a different username.").toString ()
 			);
 		}
 		// Send everyone a message saying that you logged in
-		this.parent.sendAllClients ( "{\"type\":\"online\",\"username\":\"" + username + "\"}" );
+		this.parent.sendAllClients ( successToAll("created", username) );
 	}
 
 	/**
@@ -104,6 +107,18 @@ public class Handler {
 	 */
 	protected void handleMessage ( Respond callback, JSONObject request ) {
 		System.out.println ( "[MESSAGE]\t" + request.toString () );
+
+		String groupname = request.get("name");
+		String group_hash = request.get("hash");
+		JSONArray users = (JSONArray) request.get("users");
+		GroupDB newGroup = new GroupDB(group_hash, groupname, users);
+
+		String from = request.get("from");
+		String timestamp = request.get("timestamp");
+		String message = request.get("message");
+
+		newGroup.addMessage(from, timestamp, message);
+
 		// try {
 		//     Thread.sleep(2000);
 		// } catch(InterruptedException ex) {
@@ -128,7 +143,7 @@ public class Handler {
 	/**
 	 * 
 	 */
-	protected JSONObject successLogin ( String type, String username )
+	protected JSONObject successSync ( String type, String username, JSONArray groups )
 	{
 		JSONObject result = new JSONObject();
 
@@ -154,6 +169,17 @@ public class Handler {
 				users.add(user);
 		}
 		result.put("users", users);
+		result.put("groups", groups);
+		return result;
+	}
+
+	protected JSONObject successToAll( String type, String username)
+	{
+		JSONObject result = new JSONObject();
+
+		result.put("type", type);
+		result.put("username", username);
+
 		return result;
 	}
 

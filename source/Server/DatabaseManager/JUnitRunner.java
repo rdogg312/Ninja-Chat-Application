@@ -7,9 +7,9 @@ public class JUnitRunner
 
     public static void main(String[] args)
     {
-        Result[] results = new Result[2];
+        Result[] results = new Result[1];
         results[0] = JUnitCore.runClasses(GroupDBTest.class);
-        results[1] = JUnitCore.runClasses(UsersDBTest.class);
+        //results[1] = JUnitCore.runClasses(UsersDBTest.class);
         
         for(Result result : results)
         {

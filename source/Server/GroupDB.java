@@ -23,7 +23,7 @@ public class GroupDB {
 
 	// @param 	String 		folderpath 		"../assets/databases/groups/"
 
-	private static 	final String FOLDERPATH = "../../assets/databases/groups/";
+	private static 	final String FOLDERPATH = "./assets/databases/groups/";
 	private static	String FILEPATH; 
 	private JSONObject  group_json;
 	private String 		groupname;

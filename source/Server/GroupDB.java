@@ -42,6 +42,7 @@ public class GroupDB {
 		if(!createFileAndPath())
 		{
 			load();
+			update ();
 		}
 		else
 		{		

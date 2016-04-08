@@ -139,9 +139,13 @@ public class Server {
 	 */
 	protected Tuple findClient ( String username ) {
 		// Traverse through all the logged in users
-		for ( Tuple client : this.clients ) {
+		for ( int i = 0; i < this.clients.size (); i++ ) {
+			Tuple client = this.clients.get ( i );
+			String user = client.first ().toString ();
+			System.out.println ( "Evaluating if found on: " + user + " with " + username );
 			// Check to see if the client is binded with the target username
-			if ( client.first ().toString ().equals ( username ) ) {
+			if ( user.equals ( username ) ) {
+				System.out.println ( "Client " + username + " was not found in connections" );
 				// Return the found client
 				return client;
 			}

@@ -3,6 +3,7 @@ package Server;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * This class groups together all handlers for all types of packets.  All the handlers have passed
@@ -37,8 +38,10 @@ public class Handler {
 	public Handler ( Server parent ) {
 		// Save the parent reference internally
 		this.parent = parent;
+		JSONArray user = new JSONArray ();
+		user.add ( "Everybody" );
 		this.users_db = new UsersDB();
-		this.everybody = new GroupDB("0", "Everybody", new JSONArray());
+		this.everybody = new GroupDB("0", "Everybody", user );
 	}
 
 	/**
@@ -54,6 +57,7 @@ public class Handler {
 		if(users_db.userLogin(username, password)) {
 			// Add user connection to logged in array list
 			this.parent.addClient ( username, callback );
+			System.out.println ( "Added User (" + username + ") to the clients tuple list" );
 			// Write a response back to client
 
 			callback.write ( this.successSync ( "login", username, groups ).toString () );
@@ -109,18 +113,30 @@ public class Handler {
 		JSONArray users = (JSONArray) request.get("users");
 		GroupDB newGroup = new GroupDB(group_hash, groupname, users);
 
+		// Create an Array list of strings for users
+		ArrayList <String> usersString = new ArrayList <String> ();
+		// Traverse through JSON users object and add to usersString list
+		for ( int i = 0; i < users.size (); i++ ) {
+			// Cast object as string and add to string array of users
+			usersString.add ( users.get ( i ).toString () );
+			System.out.println ( "ADDING: " + users.get ( i ).toString () + " to string array user list" );
+		}
+
 		String from = request.get("from").toString();
 		String timestamp = request.get("timestamp").toString();
 		String message = request.get("message").toString();
 
 		newGroup.addMessage(from, timestamp, message);
 
-		if ( users.contains ( "Everybody" ) ) {
+		System.out.println ( "users List (JSON) = " + users.toString () );
+		System.out.println ( "userString List = " + usersString.toString () );
+
+		if ( usersString.contains ( "Everybody" ) ) {
 			this.parent.sendAllClients ( request.toString () );
 		}
 		else {
 			for ( Tuple client : this.parent.clients ) {
-				if ( users.contains ( client.first ().toString () ) ) {
+				if ( usersString.contains ( client.first ().toString () ) ) {
 					Respond target = ( Respond ) client.second ();
 					target.write ( request.toString () );
 				}

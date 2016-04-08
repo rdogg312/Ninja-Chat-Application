@@ -150,7 +150,8 @@ public class Handler {
 	protected void handleLogout ( Respond callback, JSONObject request ) {
 		System.out.println ( "[LOGOUT]\t\t" + request.toString () );
 		// Remove user connection from logged in client array list
-		this.parent.removeClient ( request.get ( "username" ).toString () );
+		String username = request.get ( "username" ).toString ();
+		this.parent.removeClient ( username );
 		this.parent.sendAllClients ( successToAll("online", username, false).toString() );
 	}
 

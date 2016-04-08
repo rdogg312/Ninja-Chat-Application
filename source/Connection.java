@@ -254,7 +254,7 @@ public class Connection implements Runnable {
 			// Check to see if the type is an online notifier
 			else if ( type.equals ( "online" ) ) {
 				String username = json.get ( "username" ).toString ();
-				boolean online = Boolean.parseBoolean ( json.get ( "value" ) );
+				boolean online = Boolean.parseBoolean ( json.get ( "value" ).toString () );
 				User target = this.application.menuArea.users.findUser ( username );
 				if ( target != null ) {
 					target.setOnline ( online );
@@ -263,7 +263,7 @@ public class Connection implements Runnable {
 			// Check to see if it is a new user notifier
 			else if ( type.equals ( "created" ) ) {
 				String username = json.get ( "username" ).toString ();
-				boolean online = Boolean.parseBoolean ( json.get ( "value" ) );
+				boolean online = Boolean.parseBoolean ( json.get ( "value" ).toString () );
 				User newUser = new User ( username, online );
 				this.application.menuArea.users.append ( newUser );
 			}

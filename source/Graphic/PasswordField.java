@@ -135,7 +135,7 @@ public class PasswordField extends JPasswordField implements FocusListener {
 	/**
 	 * This function resets all the tracking variables, and also resets the text to be the
 	 * placeholder and resets the font color to the placeholder color.
-	 * @return 	void
+	 * @return  void
 	 */
 	public void empty () {
 		// Reset flag to be true

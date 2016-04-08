@@ -12,27 +12,40 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+/**
+ * This class implements Runnable and it is spawned on a new thread and is responsible for
+ * validating a server connection, logging in and handling all the actions necessary from server
+ * incoming packets.
+ * @version     1.0.0
+ * @university  University of Illinois at Chicago
+ * @course      CS342 - Software Design
+ * @category    Project #04 - Ninja: Chat Application
+ * @package     Client
+ * @author      Rafael Grigorian
+ * @author      Byambasuren Gansukh
+ * @license     GNU Public License <http://www.gnu.org/licenses/gpl-3.0.txt>
+ */
 public class Connection implements Runnable {
 
 	/**
 	 * This data member is here to save the reference of the initial server select class.  It is
 	 * here because we use it to control error message output and to disable text fields and buttons
 	 * while the connection is verified.
-	 * @var 	ServerSelect 	parent 				The server select instance for GUI output
+	 * @var     ServerSelect    parent              The server select instance for GUI output
 	 */
 	private ServerSelect parent;
 
 	/**
 	 * This data member saves the login window that we spawn, it is used to handle logging into an
 	 * account.
-	 * @var 	Login 			login 				The login window instance spawned by this class
+	 * @var     Login           login               The login window instance spawned by this class
 	 */
 	private Login login;
 
 	/**
 	 * This data member holds the reference to the chat application class and is used for
 	 * interacting with the message packets.
-	 * @var 	ChatApplication application 		The chat application reference
+	 * @var     ChatApplication application         The chat application reference
 	 */
 	private ChatApplication application;
 
@@ -60,9 +73,9 @@ public class Connection implements Runnable {
 	/**
 	 * This constructor disables GUI elements during verification, and initializes a socket
 	 * connection with the user.
-	 * @var 	SeverSelect 	parent 				This is a reference to the parent caller
-	 * @var 	String 			ip 					The IP address to connect socket to
-	 * @var 	int 			port 				The port to connect socket to
+	 * @var     SeverSelect     parent              This is a reference to the parent caller
+	 * @var     String          ip                  The IP address to connect socket to
+	 * @var     int             port                The port to connect socket to
 	 */
 	public Connection ( ServerSelect parent, String ip, int port ) {
 		// Save the parent reference handle
@@ -81,7 +94,7 @@ public class Connection implements Runnable {
 			this.input = new BufferedReader (
 				// Create a new instance of the input stream reader using the socket
 				new InputStreamReader ( this.connection.getInputStream () )
-			); 
+			);
 		}
 		// Attempt to catch exception
 		catch ( Exception exception ) {
@@ -98,7 +111,7 @@ public class Connection implements Runnable {
 
 	/**
 	 * This function simply sends the passed message to the socket connection
-	 * @var 	String 			message 			The message to send
+	 * @var     String          message             The message to send
 	 * @return  return
 	 */
 	protected void send ( String message ) {
@@ -109,7 +122,7 @@ public class Connection implements Runnable {
 	/**
 	 * This function attempts to read the input from the server and returns the result.  If there
 	 * are errors, then null is returned.
-	 * @return  String  							The string that was read from the socket
+	 * @return  String                              The string that was read from the socket
 	 */
 	private String read () {
 		// Attempt to read the socket
@@ -152,6 +165,13 @@ public class Connection implements Runnable {
 		}
 	}
 
+	/**
+	 * This function handles the message that is sent from the server.  It handles login, create,
+	 * message, online, and created packets.  It is passed an already JSON object in the form of a
+	 * request.
+	 * @param   JSONObject      json                The request packet in the form of JSONObject
+	 * @return  void
+	 */
 	private void handler ( JSONObject json ) {
 		// First check that the object is not null
 		if ( json != null ) {
@@ -180,32 +200,24 @@ public class Connection implements Runnable {
 			}
 			// Check to see if the type is a message response
 			else if ( type.equals ( "message" ) ) {
-				System.out.println ( "okay im in messages at least" );
 				// Get current messages
 				Messages current = this.application.messageArea.groups.getCurrentMessages ();
-
 				// Get the group by searching with hash
 				Group target = this.application.messageArea.groups.getGroupByHash (
 					json.get ( "hash" ).toString ()
 				);
-
+				// Check to see that the group is not null, so it exists
 				if ( target != null ) {
-					if ( current == target.getMessages () ) {
-						current.addMessage (
-							json.get ( "message" ).toString (),
-							json.get ( "from" ).toString (),
-							json.get ( "timestamp" ).toString (),
-							json.get ( "from" ).toString ().equals ( this.application.username )
-						);
-						System.out.println ( "message was for current tab" );
-					}
-					else {
-						target.getMessages ().addMessage (
-							json.get ( "message" ).toString (),
-							json.get ( "from" ).toString (),
-							json.get ( "timestamp" ).toString (),
-							json.get ( "from" ).toString ().equals ( this.application.username )
-						);
+					// Append message to target message area
+					target.getMessages ().addMessage (
+						json.get ( "message" ).toString (),
+						json.get ( "from" ).toString (),
+						json.get ( "timestamp" ).toString (),
+						json.get ( "from" ).toString ().equals ( this.application.username )
+					);
+					// If the group is not selected
+					if ( current != target.getMessages () ) {
+						// Set the read flag to false
 						target.setRead ( false );
 						// Play opening sound effect
 						try {
@@ -221,22 +233,31 @@ public class Connection implements Runnable {
 						catch ( Exception exception ) {}
 					}
 				}
+				// The group does not exist, so create it
 				else {
+					// Get the groups and the name and hash from the JSON object
 					Groups groups = this.application.messageArea.groups;
 					String name = json.get ( "name" ).toString ();
 					String hash = json.get ( "hash" ).toString ();
+					// Initialize an array list of stings of users
 					ArrayList <String> users = new ArrayList <String> ();
+					// Traverse through the JSON array and populate into string array
 					for ( Object user : ( ArrayList <Object> ) json.get ( "users" ) ) {
+						// Append to the string array
 						users.add ( user.toString () );
 					}
+					// Create a new group using above information
 					Group group = groups.addGroup ( name, hash, users );
+					// Set the group to be selected
 					group.setSelected ( true );
+					// Add the message to the group
 					group.getMessages ().addMessage (
 						json.get ( "message" ).toString (),
 						json.get ( "from" ).toString (),
 						json.get ( "timestamp" ).toString (),
 						json.get ( "from" ).toString ().equals ( this.application.username )
 					);
+					// Set the group to be the current one
 					groups.setCurrentMessage ( hash );
 					// Play opening sound effect
 					try {

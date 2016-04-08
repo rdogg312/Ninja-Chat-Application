@@ -80,6 +80,19 @@ public class Handler {
 		// Get the username and password
 		String username = request.get ( "username" ).toString ();
 		String password = request.get ( "password" ).toString ();
+		// Check to see that the user request is not Everybody
+		if ( username.toLowerCase ().trim ().equals ( "everybody" ) ) {
+			// Send failed JSON message
+			callback.write (
+				// Create a template using the fail template generator
+				this.failTemplate (
+					"create",
+					"This username is restricted and is not allowed to be created, sorry!"
+				).toString ()
+			);
+			// Return so we don't continue
+			return;
+		}
 		JSONArray groups = GroupDB.getGroups(username);
 		// Check to see if we successfully created a user
 		if ( users_db.userAdd ( username, password ) ) {

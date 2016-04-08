@@ -8,33 +8,86 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * 
+ *
+ *
+ *
+ * 
+ * @version     1.0.0
+ * @university  University of Illinois at Chicago
+ * @course      CS342 - Software Design
+ * @category    Project #04 - Ninja: Chat Application
+ * @package     Client
+ * @author      Rafael Grigorian
+ * @author      Byambasuren Gansukh
+ * @license     GNU Public License <http://www.gnu.org/licenses/gpl-3.0.txt>
+ */
 @SuppressWarnings ( "serial" )
 public class Group extends JLabel {
 
+	/**
+	 * 
+	 */
 	private String html;
 
+	/**
+	 * 
+	 */
 	private String hash;
 
+	/**
+	 * 
+	 */
 	private String groupName;
 
+	/**
+	 * 
+	 */
 	private Messages messages;
 
+	/**
+	 * 
+	 */
 	protected ArrayList <String> users;
 
+	/**
+	 * 
+	 */
 	private boolean read;
 
+	/**
+	 * 
+	 */
 	private boolean selected;
 
+	/**
+	 * 
+	 */
 	private Color selectedColor;
 
+	/**
+	 * 
+	 */
 	private Color unSelectedColor;
 
+	/**
+	 * 
+	 */
 	private String readBackground;
 
+	/**
+	 * 
+	 */
 	private String unreadBackground;
 
+	/**
+	 * 
+	 */
 	public Group ( String name, String hash, ArrayList <String> users, boolean read ) {
+		// Run the super constructor
 		super ( "" );
+		// Save all the passed data and set initial values
 		this.groupName = name;
 		this.hash = hash;
 		this.readBackground = "url(file:assets/images/No-New-Message.png)";
@@ -45,8 +98,9 @@ public class Group extends JLabel {
 		this.html = this.loadHTML ( "./assets/templates/group.tpl" );
 		this.setRead ( read );
 		this.users = users;
+		// Create a new instance of the messages class
 		this.messages = new Messages ( this );
-
+		// Set the styling preferences for the JLabel
 		super.setText ( this.setRead ( read ) );
 		super.setCursor ( new Cursor ( Cursor.HAND_CURSOR ) );
 		super.setOpaque ( true );
@@ -54,6 +108,9 @@ public class Group extends JLabel {
 		super.setForeground ( new Color ( 0x6D6D6D ) );
 	}
 
+	/**
+	 * 
+	 */
 	protected String setRead ( boolean read ) {
 		// Save the read state internally
 		this.read = read;
@@ -77,35 +134,60 @@ public class Group extends JLabel {
 		return contents;
 	}
 
-
+	/**
+	 * 
+	 */
 	protected Messages setSelected ( boolean selected ) {
+		// Save the passed selection boolean
 		this.selected = selected;
+		// If it is selected
 		if ( selected ) {
+			// Change the background color and set the read flag
 			this.setBackground ( this.selectedColor );
 			this.setRead ( true );
+			// Return the messages instance
 			return this.messages;
 		}
-		else {
-			this.setBackground ( this.unSelectedColor );
-			return null;
-		}
+		// Otherwise, it is not selected, set the background and return null
+		this.setBackground ( this.unSelectedColor );
+		return null;
 	}
 
+	/**
+	 * 
+	 */
 	protected String getHash () {
+		// Return the group hash
 		return this.hash;
 	}
+
+	/**
+	 * 
+	 */
 	protected Messages getMessages () {
+		// Return the message area instance
 		return this.messages;
 	}
 
+	/**
+	 * 
+	 */
 	protected String getNames () {
+		// Return the group name
 		return this.groupName;
 	}
 
+	/**
+	 * 
+	 */
 	protected ArrayList <String> getUsers () {
+		// Return the string array list of users in the group
 		return this.users;
 	}
 
+	/**
+	 * 
+	 */
 	private String loadHTML ( String filepath ) {
 		// Initialize contents variable
 		String contents = "";
@@ -127,6 +209,10 @@ public class Group extends JLabel {
 		return contents;
 	}
 
+	/**
+	 *
+	 * @static
+	 */
 	public static String createHash ( int length ) {
 		// Initialize a random number generator
 		Random rand = new Random ();

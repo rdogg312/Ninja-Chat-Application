@@ -15,15 +15,46 @@ import java.util.Date;
 import Graphic.Button;
 import Graphic.TextField;
 
+/**
+ * This class implements the action listener class to handle the send button click and it inherits
+ * from a JPanel so that it can populate the chat area sub section of the char application.
+ * @version     1.0.0
+ * @university  University of Illinois at Chicago
+ * @course      CS342 - Software Design
+ * @category    Project #04 - Ninja: Chat Application
+ * @package     Client
+ * @author      Rafael Grigorian
+ * @author      Byambasuren Gansukh
+ * @license     GNU Public License <http://www.gnu.org/licenses/gpl-3.0.txt>
+ */
 @SuppressWarnings ( "serial" )
 public class ChatArea extends JPanel implements ActionListener {
 
+	/**
+	 * This data member saves the instance of the calling parent, and is used to communicate with
+	 * other parts of the GUI components.
+	 * @var     ChatApplication     parent          The calling parent class
+	 */
 	private ChatApplication parent;
 
+	/**
+	 * This data member saves the instance of the TextBox class that is used to input a message to
+	 * be sent to the group.
+	 * @var     TextField       textbox             The input message text box
+	 */
 	protected TextField textbox;
 
+	/**
+	 * This data member stores the instance of the send button that is used to send an inputed
+	 * message to the server.
+	 * @var     Button          send                The send message button
+	 */
 	protected Button send;
 
+	/**
+	 * This constructor initializes the components in this panel and attaches listeners to them.
+	 * @param   ChatApplication     frame           The reference to the parent caller class
+	 */
 	public ChatArea ( ChatApplication frame ) {
 		// Call the super constructor and don't use a manager
 		super ( null );
@@ -48,6 +79,11 @@ public class ChatArea extends JPanel implements ActionListener {
 		this.add ( send );
 	}
 
+	/**
+	 * This function is a static function and it generates a timestamp containing the date and time.
+	 * @return  String                              Returns a string representation of a timestamp
+	 * @static
+	 */
 	protected static String timestamp () {
 		// Initialize a date format using a string
 		SimpleDateFormat dateFormat = new SimpleDateFormat ("MM/dd/yyyy - kk:mm:ss");
@@ -55,6 +91,12 @@ public class ChatArea extends JPanel implements ActionListener {
 		return dateFormat.format ( new Date () );
 	}
 
+	/**
+	 * This function is here because this class implements an action listener class and it is used
+	 * when the send button is clicked or when the enter key is pressed in the text box instance.
+	 * @param   ActionEvent     event               The caught event from the Action Listener
+	 * @return  void
+	 */
 	public void actionPerformed ( ActionEvent event ) {
 		// Check to see that the action was on the send button, even though thats all we binded
 		if ( event.getSource () == this.send || event.getSource () == this.textbox ) {
@@ -88,6 +130,6 @@ public class ChatArea extends JPanel implements ActionListener {
 			}
 			this.textbox.requestFocus ();
 		}
-    }
+	}
 
 }

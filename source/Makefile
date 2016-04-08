@@ -14,3 +14,4 @@ clean:
 	rm -rf ./*.class
 	rm -rf ./Graphic/*.class
 	rm -rf ./Server/*.class
+	rm -rf ./Client/*.class

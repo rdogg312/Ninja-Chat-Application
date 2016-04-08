@@ -20,19 +20,62 @@ import Graphic.Display;
 import Graphic.TextField;
 import Graphic.Button;
 
+/**
+ * This class implements the window listener and it is used to logout of the account and verify a
+ * window close.  This class initializes all the sub panels of this chat application.
+ * @version     1.0.0
+ * @university  University of Illinois at Chicago
+ * @course      CS342 - Software Design
+ * @category    Project #04 - Ninja: Chat Application
+ * @package     Client
+ * @author      Rafael Grigorian
+ * @author      Byambasuren Gansukh
+ * @license     GNU Public License <http://www.gnu.org/licenses/gpl-3.0.txt>
+ */
 @SuppressWarnings ( "serial" )
 public class ChatApplication extends Display implements WindowListener {
 
+	/**
+	 * This data member saves the instance of the Connection object that is running on a separate
+	 * thread in the background trying to receive information from the server.
+	 * @var     Connection      connection          The connection instance opened on server select
+	 */
 	protected Connection connection;
 
+	/**
+	 * This data member saves an instance of the created message area panel.  This panel contains
+	 * the group tabs, the and the actual message area along with the group users information area.
+	 * @var     MessageArea     messageArea         The message area panel
+	 */
 	protected MessageArea messageArea;
 
+	/**
+	 * This data member saves an instance of the created chat area panel.  This panel contains the
+	 * text field for string input and the send button.
+	 * @var     CharArea        chatArea            The chat area panel
+	 */
 	protected ChatArea chatArea;
 
+	/**
+	 * This data member saves an instance of the created menu area panel.  This panel contains the
+	 * users menu with a search box and the create chat room button.
+	 * @var     MenuArea        menuArea            The menu area panel
+	 */
 	protected MenuArea menuArea;
 
+	/**
+	 * This data member saves the username of the logged in user.  It is extracted from the
+	 * initially passed JSON object.
+	 * @var     String          username            The username of the logged in user
+	 */
 	protected String username;
 
+	/**
+	 * This constructor saves the the passed parameters and it initializes all the areas of the GUI.
+	 * It then plays an opening sound clip.
+	 * @param   Connection      connection          The open socket connection to the server
+	 * @param   JSONObject      json                The initial login json string from server
+	 */
 	public ChatApplication ( Connection connection, JSONObject json ) {
 		// Run super constructor and set background color
 		super ( "Ninja - Chat Application", 700, 600 );
@@ -70,6 +113,14 @@ public class ChatApplication extends Display implements WindowListener {
 		catch ( Exception exception ) {}
 	}
 
+	/**
+	 * This function runs whenever the close button on the window is closed.  It asks if the user
+	 * really wants to logout, and if so, it sends a packet to the server letting it know about the
+	 * logout, and then it closes the window.
+	 * @param   WindowEvent     event               The caught window event
+	 * @return  void
+	 * @override
+	 */
 	@Override
 	public void windowClosing ( WindowEvent event ) {
 		// Initialize dialog to ask user if they want to logout
@@ -87,22 +138,64 @@ public class ChatApplication extends Display implements WindowListener {
 		}
 	}
 
+	/**
+	 * This function needs to be here in order to implement the WindowListener class.  It is not
+	 * used in this class, but it is required to be here.
+	 * @param   WindowEvent     event               The caught window event
+	 * @return  void
+	 * @override
+	 */
 	@Override
 	public void windowActivated ( WindowEvent event ) {}
 
+	/**
+	 * This function needs to be here in order to implement the WindowListener class.  It is not
+	 * used in this class, but it is required to be here.
+	 * @param   WindowEvent     event               The caught window event
+	 * @return  void
+	 * @override
+	 */
 	@Override
 	public void windowClosed ( WindowEvent event ) {}
 
+	/**
+	 * This function needs to be here in order to implement the WindowListener class.  It is not
+	 * used in this class, but it is required to be here.
+	 * @param   WindowEvent     event               The caught window event
+	 * @return  void
+	 * @override
+	 */
 	@Override
 	public void windowDeactivated ( WindowEvent event ) {}
 
+	/**
+	 * This function needs to be here in order to implement the WindowListener class.  It is not
+	 * used in this class, but it is required to be here.
+	 * @param   WindowEvent     event               The caught window event
+	 * @return  void
+	 * @override
+	 */
 	@Override
 	public void windowDeiconified ( WindowEvent event ) {}
 
+	/**
+	 * This function needs to be here in order to implement the WindowListener class.  It is not
+	 * used in this class, but it is required to be here.
+	 * @param   WindowEvent     event               The caught window event
+	 * @return  void
+	 * @override
+	 */
 	@Override
 	public void windowIconified ( WindowEvent event ) {}
 
+	/**
+	 * This function needs to be here in order to implement the WindowListener class.  It is not
+	 * used in this class, but it is required to be here.
+	 * @param   WindowEvent     event               The caught window event
+	 * @return  void
+	 * @override
+	 */
 	@Override
 	public void windowOpened ( WindowEvent event ) {}
-		
+
 }

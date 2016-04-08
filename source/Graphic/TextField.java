@@ -101,7 +101,7 @@ public class TextField extends JTextField implements FocusListener {
 		// Set the position based on parameters
 		this.setBounds ( x, y, size.width, size.height );
 	}
-	
+
 	/**
 	 * This function sets the placeholder color and it is saved internally, so when we encounter the
 	 * focus listener handler, we can use this placeholder dynamically.
@@ -115,7 +115,7 @@ public class TextField extends JTextField implements FocusListener {
 	/**
 	 * This function resets all the tracking variables, and also resets the text to be the
 	 * placeholder and resets the font color to the placeholder color.
-	 * @return 	void
+	 * @return  void
 	 */
 	public void empty () {
 		// Reset flag to be true

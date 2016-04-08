@@ -3,7 +3,6 @@ package Server;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
 import org.json.simple.parser.JSONParser;
 import java.io.File;
 import java.nio.file.Files;
@@ -99,7 +98,7 @@ public class GroupDB {
 			return object;
 		}
 		// Attempt to catch any parse exceptions
-		catch ( ParseException exception ) {
+		catch ( Exception exception ) {
 			// If there was an error, return null
 			return null;
 		}

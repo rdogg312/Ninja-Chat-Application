@@ -52,6 +52,8 @@ public class ChatApplication extends Display implements WindowListener {
 		super.setIconImage ( Toolkit.getDefaultToolkit ().getImage ( Paths.get("assets/images/Logo.png").toUri().toString() ) );
 		super.render ();
 		this.chatArea.textbox.requestFocus ();
+		// Add the window listener
+		this.addWindowListener ( this );
 		// Play opening sound effect
 		try {
 			// Load in the audio file as a stream and play it

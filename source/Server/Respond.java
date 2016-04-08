@@ -2,7 +2,6 @@ package Server;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
 import org.json.simple.parser.JSONParser;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -160,7 +159,7 @@ public class Respond implements Runnable {
 			return object;
 		}
 		// Attempt to catch any parse exceptions
-		catch ( ParseException exception ) {
+		catch ( Exception exception ) {
 			// If there was an error, return null
 			return null;
 		}

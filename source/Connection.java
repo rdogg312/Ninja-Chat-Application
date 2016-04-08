@@ -263,9 +263,11 @@ public class Connection implements Runnable {
 			// Check to see if it is a new user notifier
 			else if ( type.equals ( "created" ) ) {
 				String username = json.get ( "username" ).toString ();
-				boolean online = Boolean.parseBoolean ( json.get ( "value" ).toString () );
-				User newUser = new User ( username, online );
-				this.application.menuArea.users.append ( newUser );
+				if ( !this.application.username.toLowerCase ().equals ( username.toLowerCase () ) ) {
+					boolean online = Boolean.parseBoolean ( json.get ( "value" ).toString () );
+					User newUser = new User ( username, online );
+					this.application.menuArea.users.append ( newUser );
+				}
 			}
 		}
 	}

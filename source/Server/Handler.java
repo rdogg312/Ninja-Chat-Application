@@ -57,6 +57,7 @@ public class Handler {
 			// Write a response back to client
 
 			callback.write ( this.successSync ( "login", username, groups ).toString () );
+			System.out.println ( this.successSync ( "login", username, groups ).toString () );
 		}
 		else {
 			callback.write ( this.failTemplate ( "login", "Failed to login! Username doesn't exist and/or wrong password!" ).toString () );

@@ -25,7 +25,7 @@ public class MenuArea extends JPanel implements ActionListener {
 
 	private TextField search;
 
-	private Users users;
+	protected Users users;
 
 	private Button create;
 

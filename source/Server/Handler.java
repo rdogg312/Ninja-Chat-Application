@@ -67,7 +67,7 @@ public class Handler {
 			callback.write ( this.failTemplate ( "login", "Failed to login! Username doesn't exist and/or wrong password!" ).toString () );
 		}
 		// Send everyone a message saying that you logged in
-		this.parent.sendAllClients ( successToAll("online", username).toString() );
+		this.parent.sendAllClients ( successToAll("online", username, true).toString() );
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class Handler {
 			);
 		}
 		// Send everyone a message saying that you logged in
-		this.parent.sendAllClients ( successToAll("created", username).toString() );
+		this.parent.sendAllClients ( successToAll("created", username, true).toString() );
 	}
 
 	/**
@@ -151,8 +151,7 @@ public class Handler {
 		System.out.println ( "[LOGOUT]\t\t" + request.toString () );
 		// Remove user connection from logged in client array list
 		this.parent.removeClient ( request.get ( "username" ).toString () );
-
-		callback.write ( this.parent.clientsOnline ().toString () );
+		this.parent.sendAllClients ( successToAll("online", username, false).toString() );
 	}
 
 	/**
@@ -188,12 +187,13 @@ public class Handler {
 		return result;
 	}
 
-	protected JSONObject successToAll( String type, String username)
+	protected JSONObject successToAll( String type, String username, boolean value )
 	{
 		JSONObject result = new JSONObject();
 
 		result.put("type", type);
 		result.put("username", username);
+		result.put ( "value", value );
 
 		return result;
 	}

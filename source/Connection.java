@@ -251,11 +251,21 @@ public class Connection implements Runnable {
 					System.out.println ( "group does not exist locally" );
 				}
 			}
+			// Check to see if the type is an online notifier
 			else if ( type.equals ( "online" ) ) {
-
+				String username = json.get ( "username" ).toString ();
+				boolean online = Boolean.parseBoolean ( json.get ( "value" ) );
+				User target = this.application.menuArea.users.findUser ( username );
+				if ( target != null ) {
+					target.setOnline ( online );
+				}
 			}
+			// Check to see if it is a new user notifier
 			else if ( type.equals ( "created" ) ) {
-				
+				String username = json.get ( "username" ).toString ();
+				boolean online = Boolean.parseBoolean ( json.get ( "value" ) );
+				User newUser = new User ( username, online );
+				this.application.menuArea.users.append ( newUser );
 			}
 		}
 	}

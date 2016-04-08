@@ -3,6 +3,7 @@ import org.json.simple.JSONArray;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.WindowListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.nio.file.Paths;
@@ -18,7 +19,7 @@ import Graphic.TextField;
 import Graphic.Button;
 
 @SuppressWarnings ( "serial" )
-public class ChatApplication extends Display {
+public class ChatApplication extends Display implements WindowListener {
 
 	protected Connection connection;
 
@@ -63,25 +64,41 @@ public class ChatApplication extends Display {
 		}
 		// Catch any exception, if caught, we want to ignore this error
 		catch ( Exception exception ) {}
-		// Attach a close window listener, to logout
-		this.addWindowListener ( new WindowAdapter () {
-			// Define the anonymous window closing window adapter function
-			public void windowClosing ( WindowEvent e ){
-				// Initialize dialog to ask user if they want to logout
-				int a = JOptionPane.showConfirmDialog ( null, "Are you sure you want to logout?" );
-				// Check if the user choose yes
-				if ( a == 0 ) {
-					// // Construct logout packet
-					// JSONObject json = new JSONObject ();
-					// json.put ( "type", "logout" );
-					// json.put ( "username", this.username );
-					// // Send logout packet to server
-					// this.connection.send ( json.toString () );
-					// Exit the application
-					System.exit ( 0 );
-				}
-			}
-		});
 	}
 
+	@Override
+	public void windowClosing ( WindowEvent event ) {
+		// Initialize dialog to ask user if they want to logout
+		int a = JOptionPane.showConfirmDialog ( null, "Are you sure you want to logout?" );
+		// Check if the user choose yes
+		if ( a == 0 ) {
+			// Construct logout packet
+			JSONObject json = new JSONObject ();
+			json.put ( "type", "logout" );
+			json.put ( "username", this.username );
+			// Send logout packet to server
+			this.connection.send ( json.toString () );
+			// Exit the application
+			System.exit ( 0 );
+		}
+	}
+
+	@Override
+	public void windowActivated ( WindowEvent event ) {}
+
+	@Override
+	public void windowClosed ( WindowEvent event ) {}
+
+	@Override
+	public void windowDeactivated ( WindowEvent event ) {}
+
+	@Override
+	public void windowDeiconified ( WindowEvent event ) {}
+
+	@Override
+	public void windowIconified ( WindowEvent event ) {}
+
+	@Override
+	public void windowOpened ( WindowEvent event ) {}
+		
 }

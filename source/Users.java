@@ -44,6 +44,18 @@ class Users extends ScrollPanel {
 	}
 
 	/**
+	 * 
+	 */
+	protected User findUser ( String username ) {
+		for ( User user : this.list ) {
+			if ( user.getUsername ().toLowerCase ().equals ( username.toLowerCase () ) ) {
+				return user;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * This function appends a user object to the users list if it doesn't exist within it already.
 	 * It also re-renders the panel again to show the changes.
 	 * @param   User            user                The user instance to append to list and panel

@@ -221,7 +221,7 @@ public class GroupDB {
 				}
 
 				JSONObject group = (JSONObject) parse(stringBuilder.toString());
-				if(group != null && group.toString().contains(username))
+				if(group != null && group.toString().contains(username) || group.toString().contains(“Everybody”))
 					groups.add(group);
 				
 			}

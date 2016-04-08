@@ -1,3 +1,5 @@
+package Client;
+
 import javax.swing.BoxLayout;
 import java.awt.Component;
 import java.awt.event.MouseListener;

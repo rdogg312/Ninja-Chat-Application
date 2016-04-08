@@ -3,6 +3,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 import org.json.simple.parser.JSONParser;
 import Server.Server;
+import Client.ServerSelect;
 
 public class Ninja {
 

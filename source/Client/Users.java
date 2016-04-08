@@ -1,3 +1,5 @@
+package Client;
+
 import java.awt.Color;
 import javax.swing.BoxLayout;
 import java.util.ArrayList;

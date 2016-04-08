@@ -1,3 +1,5 @@
+package Client;
+
 import java.awt.Cursor;
 import java.awt.Color;
 import java.io.File;

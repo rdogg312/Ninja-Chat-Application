@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * 
- *
- *
- *
- * 
+ * This class is an abstraction of a group and it inherits from the JLabel component because it also
+ * serves a purpose as a tab element in the GUI.  It holds all information about the group as well
+ * as a reference to the parent and the Messages instance that is binded to it.
  * @version     1.0.0
  * @university  University of Illinois at Chicago
  * @course      CS342 - Software Design
@@ -27,62 +25,88 @@ import java.util.Random;
 public class Group extends JLabel {
 
 	/**
-	 * 
+	 * This data member saves the contents of the HTML template file for the group tabs.  It is used
+	 * to replace certain variables and make the HTML custom to the group.
+	 * @var     String          html                The HMTL template for a group tab
 	 */
 	private String html;
 
 	/**
-	 * 
+	 * This is the group hash.  It is unique to the group, and it is randomly generated on first
+	 * group creation.
+	 * @var     String          hash                Unique group hash
 	 */
 	private String hash;
 
 	/**
-	 * 
+	 * This data member holds the group name, and it does not have to be unique.  This name is
+	 * defined when a user creates a group.
+	 * @var     String          groupName           The group name
 	 */
 	private String groupName;
 
 	/**
-	 * 
+	 * This data member holds an instance to a Messages object, that is responsible for appending
+	 * messages to itself, etc.
+	 * @var     Messages        messages            An instance of the messages scrollable panel
 	 */
 	private Messages messages;
 
 	/**
-	 * 
+	 * This us an array list of strings that represent the users in the group.  There is always at
+	 * least one person in a group (yourself).
+	 * @var     ArrayList <String>  users           An array of users in this group
 	 */
 	protected ArrayList <String> users;
 
 	/**
-	 * 
+	 * This data member is a flag that signifies if a group has any messages that are unread.  If it
+	 * is true there are none.
+	 * @var     boolean         read                Are the messages in this group seen by the user?
 	 */
 	private boolean read;
 
 	/**
-	 * 
+	 * This flag signifies if the current group tab is selected or not.  If it is true then the
+	 * group tab is selected.
+	 * @var     boolean         selected            Is the current group selected by the user?
 	 */
 	private boolean selected;
 
 	/**
-	 * 
+	 * This data member saves the selected tab color of the group.  It is used for the GUI elements.
+	 * @var     Color           selectedColor       The selected background color of the group tab
 	 */
 	private Color selectedColor;
 
 	/**
-	 * 
+	 * This data member saves the unselected tab color of the group.  It is used for the GUI
+	 * elements.
+	 * @var     Color           unSelectedColor     The unselected background color of the group tab
 	 */
 	private Color unSelectedColor;
 
 	/**
-	 * 
+	 * This data member saves the read notification background color as a string, to input into the
+	 * template HTML for the group.  This color signifies that the group has been read.
+	 * @var     String          readBackground      The color of the notification icon in group tab
 	 */
 	private String readBackground;
 
 	/**
-	 * 
+	 * This data member saves the read notification background color as a string, to input into the
+	 * template HTML for the group.  This color signifies that the group has not been read.
+	 * @var     String          unreadBackground    The color of the notification icon in group tab
 	 */
 	private String unreadBackground;
 
 	/**
-	 * 
+	 * This constructor takes in the group information and creates a JLabel from that, and styles it
+	 * appropriately.
+	 * @param   String              name                The name of the group
+	 * @param   String              hash                The group hash id
+	 * @param   ArrayList<String>   users               The users in this group
+	 * @param   boolean             read                Initially, has the group been read by user?
 	 */
 	public Group ( String name, String hash, ArrayList <String> users, boolean read ) {
 		// Run the super constructor
@@ -109,7 +133,11 @@ public class Group extends JLabel {
 	}
 
 	/**
-	 * 
+	 * This function marks the group as either read or unread based on the passed boolean.  It also
+	 * updates the groups HTML template to reflect this in the notification area of the group tab.
+	 * It then sends back that HTML to the caller.
+	 * @param   boolean         read                What state to mark the read state
+	 * @return  String                              The HTML for the changed results
 	 */
 	protected String setRead ( boolean read ) {
 		// Save the read state internally
@@ -135,7 +163,10 @@ public class Group extends JLabel {
 	}
 
 	/**
-	 * 
+	 * This function sets the group as being selected and returns the message area to the caller if
+	 * the passed flag is to change to selected.  Otherwise it returns null.
+	 * @param   boolean         selected            The selected flag to change group to
+	 * @return  Messages                            The groups message area is returned if selected
 	 */
 	protected Messages setSelected ( boolean selected ) {
 		// Save the passed selection boolean
@@ -154,23 +185,9 @@ public class Group extends JLabel {
 	}
 
 	/**
-	 * 
-	 */
-	protected String getHash () {
-		// Return the group hash
-		return this.hash;
-	}
-
-	/**
-	 * 
-	 */
-	protected Messages getMessages () {
-		// Return the message area instance
-		return this.messages;
-	}
-
-	/**
-	 * 
+	 * This is a simply getter function that returns the groups name to the caller since it's set
+	 * as private.
+	 * @return  String                              The group name is returned to caller
 	 */
 	protected String getNames () {
 		// Return the group name
@@ -178,7 +195,29 @@ public class Group extends JLabel {
 	}
 
 	/**
-	 * 
+	 * This is a simply getter function that returns the groups hash to the caller since it's set
+	 * as private.
+	 * @return  String                              The group hash is returned to caller
+	 */
+	protected String getHash () {
+		// Return the group hash
+		return this.hash;
+	}
+
+	/**
+	 * This is a simple getter function that returns the groups hash to the caller since it's set as
+	 * private.
+	 * @return  Messages                            The groups message area instance is returned
+	 */
+	protected Messages getMessages () {
+		// Return the message area instance
+		return this.messages;
+	}
+
+	/**
+	 * This is a simply getter function that returns the users in the group to the caller since it's set
+	 * as private.  It is in the form of an array list of strings.
+	 * @return  ArrayList <String>                  The users in this group
 	 */
 	protected ArrayList <String> getUsers () {
 		// Return the string array list of users in the group
@@ -186,7 +225,11 @@ public class Group extends JLabel {
 	}
 
 	/**
-	 * 
+	 * This function takes in a filepath and loads the contents.  the contents of this file should
+	 * be an HTML template for the groups tab.  It is then saved internally so we could replace the
+	 * placeholders with actual data on initialization and on events.
+	 * @param   String          filepath            The path to the HTML template file
+	 * @return  String                              The contents of said file
 	 */
 	private String loadHTML ( String filepath ) {
 		// Initialize contents variable
@@ -210,7 +253,10 @@ public class Group extends JLabel {
 	}
 
 	/**
-	 *
+	 * This function is a static function and is used to create a random group hash id.  This id is
+	 * unique and is used as an identifier for a specific group.
+	 * @param   int             length              The desired length of the hash
+	 * @return  String                              The created unique hash id
 	 * @static
 	 */
 	public static String createHash ( int length ) {

@@ -2,44 +2,60 @@ package Client;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
-
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.Dimension;
 import java.io.File;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.Adjustable;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JScrollBar;
-import javax.swing.JTextPane;
-import javax.swing.JTextArea;
 import javax.swing.BoxLayout;
-import javax.swing.border.LineBorder;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.Scanner;
-import java.io.FileReader;
-import java.lang.StringBuilder;
 import java.util.ArrayList;
-
 import Graphic.Button;
 import Graphic.TextField;
 import Graphic.ScrollPanel;
 
+/**
+ * This class initializes the GUI elements in the messages area.  This class also gets passed a JSON
+ * array that is filled with the users groups and messages.  This is passed in login or create
+ * account time.  This info is pulled from the server and is populated into the GUI elements.
+ * @version     1.0.0
+ * @university  University of Illinois at Chicago
+ * @course      CS342 - Software Design
+ * @category    Project #04 - Ninja: Chat Application
+ * @package     Client
+ * @author      Rafael Grigorian
+ * @author      Byambasuren Gansukh
+ * @license     GNU Public License <http://www.gnu.org/licenses/gpl-3.0.txt>
+ */
 @SuppressWarnings ( "serial" )
 public class MessageArea extends JPanel {
 
+	/**
+	 * This holds a reference to the parent calling char application.  Since this is an area in the
+	 * whole GUI, it needs a reference to the parent to communicate with the rest of the GUI.
+	 * @var     ChatApplication     parent          The parent calling instance
+	 */
 	private ChatApplication parent;
 
+	/**
+	 * This data member holds a reference to the information area in the messages are part of the
+	 * GUI.  This area shows all the users in the currently selected group.
+	 * @var     JLabel          information         The information area of the messages area
+	 */
 	protected JLabel information;
 
+	/**
+	 * This holds an instance to the groups panel that is scrollable.  This holds all group tabs.
+	 * @var     Groups          groups              The groups scrollable panel
+	 */
 	protected Groups groups;
 
+	/**
+	 * This constructor initializes the GUI elements and loads all the messages that are passed in
+	 * as a parameter.  This info is saved on the server and then send to the user on login.  All
+	 * conversations and groups are populated on login or create time.
+	 * @param   ChatApplication     frame           The calling parent instance
+	 * @param   JSONArray           json            The json array with groups and messages
+	 */
 	public MessageArea ( ChatApplication frame, JSONArray json ) {
 		// Call the super constructor and don't use a manager
 		super ( null );
@@ -61,24 +77,31 @@ public class MessageArea extends JPanel {
 		this.groups = new Groups ( this, 500, 40, BoxLayout.X_AXIS );
 		this.groups.setPosition ( 0, 0 );
 		this.groups.getContentPanel ().setBackground ( new Color ( 0xF3F2F3 ) );
-
-
+		// Loop though the JSON array that was passed
 		for ( int i = 0; i < json.size (); i++ ) {
+			// Each interval have it be casted as a JSONObject
 			JSONObject group = ( JSONObject ) json.get ( i );
+			// Initialize the Array lists
 			ArrayList <String> users = new ArrayList <String> ();
 			JSONArray usersList = ( JSONArray ) group.get ( "users" );
+			// Loop though the array list of users and add then to the users array list
 			for ( int u = 0; u < usersList.size (); u++ ) {
 				users.add ( usersList.get ( u ).toString () );
 			}
+			// Create a new group based on findings
 			Group newGroup = new Group (
 				group.get ( "name" ).toString (),
 				group.get ( "hash" ).toString (),
 				users,
 				true
 			);
+			// Get the array of messages for this group
 			JSONArray messages = ( JSONArray ) group.get ( "messages" );
+			// Loop though each message in the messages array
 			for ( int j = 0; j < messages.size (); j++ ) {
+				// Cast message as a JSONObject
 				JSONObject message = ( JSONObject ) messages.get ( j );
+				// Add the message to the made messages scroll panel
 				newGroup.getMessages ().addMessage (
 					message.get ( "message" ).toString (),
 					message.get ( "from" ).toString (),
@@ -86,11 +109,11 @@ public class MessageArea extends JPanel {
 					this.parent.username.equals ( message.get ( "from" ).toString () )
 				);
 			}
+			// Append this group to the groups panel and groups array list
 			this.groups.append ( newGroup );
 		}
-
+		// Set the current char room to the public "Everybody one"
 		this.groups.setCurrentMessage ( "0" );
-
 		// Append elements to messages panel
 		this.add ( this.information );
 		this.add ( this.groups.getCurrentMessages () );

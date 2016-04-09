@@ -1,10 +1,23 @@
 package Client;
 
 import java.awt.Color;
-import javax.swing.BoxLayout;
 import java.util.ArrayList;
+import javax.swing.BoxLayout;
 import Graphic.ScrollPanel;
 
+/**
+ * This class initializes the users scroll panel and also has methods that will search and act upon
+ * the internally stored users list array.  These methods are used heavily outside of this class so
+ * it is very important.
+ * @version     1.0.0
+ * @university  University of Illinois at Chicago
+ * @course      CS342 - Software Design
+ * @category    Project #04 - Ninja: Chat Application
+ * @package     Client
+ * @author      Rafael Grigorian
+ * @author      Byambasuren Gansukh
+ * @license     GNU Public License <http://www.gnu.org/licenses/gpl-3.0.txt>
+ */
 @SuppressWarnings ( "serial" )
 class Users extends ScrollPanel {
 
@@ -46,14 +59,21 @@ class Users extends ScrollPanel {
 	}
 
 	/**
-	 * 
+	 * This function simply finds a User object from the list of users based on the username that is
+	 * passed to the method.
+	 * @param   String          username            The username of the target user for searching
+	 * @return  User                                The user object matching the passed username
 	 */
 	protected User findUser ( String username ) {
+		// Loop through all the users in the user list
 		for ( User user : this.list ) {
+			// Check to see if the username matches the iterative one's
 			if ( user.getUsername ().toLowerCase ().equals ( username.toLowerCase () ) ) {
+				// If it does, then return that user
 				return user;
 			}
 		}
+		// Otherwise, return null
 		return null;
 	}
 

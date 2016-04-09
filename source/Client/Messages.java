@@ -2,29 +2,62 @@ package Client;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.Scanner;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import java.util.Scanner;
 import Graphic.ScrollPanel;
 
+/**
+ * This class simply initializes a scrollable panel that can be populated with messages.  A function
+ * to do so is also included.
+ * @version     1.0.0
+ * @university  University of Illinois at Chicago
+ * @course      CS342 - Software Design
+ * @category    Project #04 - Ninja: Chat Application
+ * @package     Client
+ * @author      Rafael Grigorian
+ * @author      Byambasuren Gansukh
+ * @license     GNU Public License <http://www.gnu.org/licenses/gpl-3.0.txt>
+ */
 @SuppressWarnings ( "serial" )
 public class Messages extends ScrollPanel {
 
+	/**
+	 * This is the HTML string that is loaded for the messages template for the JLabel
+	 * @var     String          html                The HTML template
+	 */
 	protected String html;
 
+	/**
+	 * This data member simply holds a link to the group that this message object belongs to
+	 * @var     Group           group               The group this message is binded to
+	 */
 	protected Group group;
- 
+
+	/**
+	 * This constructor simply calls the super constructor and saves the instance of the caller to
+	 * be the binded group that this instance belongs to.
+	 * @param   Group           parent              The calling group that this is binded to
+	 */
 	public Messages ( Group parent ) {
 		// Create the message panel that is scrollable and set the default properties
-        super ( 500, 420, BoxLayout.Y_AXIS );
-        super.setPosition ( 0, 80 );
-        super.getContentPanel ().setBorder (
-        	BorderFactory.createEmptyBorder ( 0, 0, 15, 0 )
-        );
-        this.group = parent;
+		super ( 500, 420, BoxLayout.Y_AXIS );
+		super.setPosition ( 0, 80 );
+		super.getContentPanel ().setBorder (
+			BorderFactory.createEmptyBorder ( 0, 0, 15, 0 )
+		);
+		// Save the caller to be the group that this instance is binded to
+		this.group = parent;
 	}
- 
+
+	/**
+	 * This function simply loads the contents of the passed file and stores it internally.  The
+	 * contents of this file should be an HTML template.  It will be used to create a message and
+	 * feed the resulting HTML into a JLabel.
+	 * @param   String          filepath            The filepath to the HTML file
+	 * @return  String                              The contents of said HTML file
+	 */
 	private String loadHTML ( String filepath ) {
 		// Initialize contents variable
 		String contents = "";
@@ -46,6 +79,16 @@ public class Messages extends ScrollPanel {
 		return contents;
 	}
 
+	/**
+	 * This method simply appends a new message to the message area, or itself, and based on the
+	 * passed self flag if renders it out to be either from you or from someone else and styles
+	 * accordingly.
+	 * @param   String          text                The content of the message
+	 * @param   String          username            The username of the sender
+	 * @param   String          timestamp           The timestamp of the message
+	 * @param   boolean         self                Was the message sent by you?
+	 * @return  void
+	 */
 	public void addMessage ( String text, String username, String timestamp, boolean self ) {
 		// Set the default values
 		int labelFloat = JLabel.LEFT;
@@ -60,7 +103,7 @@ public class Messages extends ScrollPanel {
 			fontColor = "#6D6D6D";
 			textAlign = "right";
 		}
-		// replace HTML entities and load into HTML template
+		// Replace HTML entities and load into HTML template
 		text = text.replace ( "<", "&lt;" );
 		text = text.replace ( ">", "&gt;" );
 		String content = this.loadHTML ( "./assets/templates/message.tpl" );
@@ -71,9 +114,9 @@ public class Messages extends ScrollPanel {
 		content = content.replace ( "_INFORMATION_", username + " - " + timestamp );
 		// Create the message label using HTML
 		JLabel message = new JLabel ( content );
-	    message.setOpaque ( true );
-	   	message.setBackground ( Color.WHITE );
-	   	message.setForeground ( Color.WHITE );
+		message.setOpaque ( true );
+		message.setBackground ( Color.WHITE );
+		message.setForeground ( Color.WHITE );
 		message.setBorder ( BorderFactory.createEmptyBorder ( 15, 15, 0, 15 ) );
 		message.setHorizontalAlignment ( labelFloat );
 		this.append ( message );

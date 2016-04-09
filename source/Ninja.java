@@ -1,36 +1,34 @@
-import org.json.simple.JSONObject;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
-import org.json.simple.parser.JSONParser;
 import Server.Server;
 import Client.ServerSelect;
 
+/**
+ * This class simply either spawns the GUI client side based on the arguments or the server side
+ * that serves the clients.  If neither is called, an error pops up on the screen alerting user of
+ * the valid arguments that are available.
+ * @version     1.0.0
+ * @university  University of Illinois at Chicago
+ * @course      CS342 - Software Design
+ * @category    Project #04 - Ninja: Chat Application
+ * @package     Ninja
+ * @author      Rafael Grigorian
+ * @author      Byambasuren Gansukh
+ * @license     GNU Public License <http://www.gnu.org/licenses/gpl-3.0.txt>
+ */
 public class Ninja {
 
+	/**
+	 * This is the driver main method.  Based on the arguments it spawns either the client GUI
+	 * application of the back end server that serves the clients.  If nether is passed, then it
+	 * will warn users about the available types of arguments that can be passed.
+	 * @param   String []       args                An array of arguments in string form
+	 * @return  void
+	 * @static
+	 */
 	public static void main ( String [] args ) {
-
 		// Check if the client was trying to be spawned
 		if ( args.length > 0 && args [ 0 ].toLowerCase ().equals ( "client" ) ) {
 			// Spawn the server select GUI
 			new ServerSelect ();
-
-			// // Fake json for testing
-			// String json = "{\"type\":\"login\",\"status\":\"success\",\"public_key\":\"SERVER_KEY\",\"username\":\"NULL\",\"users\":[{\"username\":\"NULL\",\"online\":true},{\"username\":\"BennyS\",\"online\":true},{\"username\":\"TheHolyBeast\",\"online\":false},{\"username\":\"HypeBeast\",\"online\":false},{\"username\":\"Clouds\",\"online\":false},{\"username\":\"TamerS\",\"online\":false}],\"groups\":[{\"name\":\"Everybody\",\"hash\":\"0\",\"users\":[\"Everybody\"],\"messages\":[{\"from\":\"TheHolyBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Hey!\"},{\"from\":\"Clouds\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What up!\"},{\"from\":\"TamerS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"@Unemployeed\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Ayyyye!\"},{\"from\":\"HypeBeast\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"What's Happening!\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:23:53\",\"message\":\"Hey what's up guys!\"}]},{\"name\":\"CS342\",\"hash\":\"SFVG67RE6GVS8SHCA7SCGDHSKAFIUFDSHAOW\",\"users\":[\"NULL\",\"BennyS\"],\"messages\":[{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:27:22\",\"message\":\"What up Ben!\"},{\"from\":\"BennyS\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yo is the GUI done yet?\"},{\"from\":\"NULL\",\"timestamp\":\"04/04/2016 - 12:24:02\",\"message\":\"Yes ;)\"}]}]}";
-			// // Initialize json parser
-			// JSONParser parser = new JSONParser ();
-			// // Try to parse the json string
-			// try {
-			// 	// Parse and cast as a JSON object
-			// 	JSONObject object = ( JSONObject ) parser.parse ( json );
-			// 	// Pass the json object to the chat application constructor
-			// 	new ChatApplication ( object );
-			// }
-			// // Attempt to catch any parse exceptions
-			// catch ( ParseException exception ) {
-			// 	// Print error and exit
-			// 	System.out.println ( exception.toString () );
-			// 	System.exit ( 0 );
-			// }
 		}
 		// Check if the server was trying to be spawned
 		else if ( args.length > 0 && args [ 0 ].toLowerCase ().equals ( "server" ) ) {
@@ -49,9 +47,11 @@ public class Ninja {
 		}
 		// Otherwise print out usage
 		else {
+			// Inform use
 			System.out.println ( "Invalid command was passed!" );
+			System.out.println ( "\tThe argument 'client' will spawn a client application (GUI)" );
+			System.out.println ( "\tThe argument 'server' will spawn the back end server" );
 		}
-		
 	}
 
 }

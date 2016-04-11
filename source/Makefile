@@ -17,3 +17,5 @@ clean:
 	rm -rf ./Graphic/*.class
 	rm -rf ./Server/*.class
 	rm -rf ./Client/*.class
+	rm -rf ./assets/databases/groups/*
+	rm -rf ./assets/databases/users/*

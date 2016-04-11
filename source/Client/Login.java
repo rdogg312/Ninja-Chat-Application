@@ -83,6 +83,13 @@ public class Login extends Display implements ActionListener {
 	protected Button account;
 
 	/**
+	 * This is the encryption class instance.  It is used to generate a user key on startup and
+	 * sends it to the server for storing.
+	 * @var 	RSA 				encryption 		The encryption class
+	 */
+	protected RSA encryption;
+
+	/**
 	 * This constructor initializes all the GUI elements onto the JFrame and it attaches an Action
 	 * Listener to the appropriate components.
 	 * @param   Connection          connection      The created connection on separate thread
@@ -128,6 +135,8 @@ public class Login extends Display implements ActionListener {
 		this.panel.add ( this.account );
 		this.panel.add ( this.username );
 		this.panel.add ( this.password );
+		// Initialize the encryption class
+		this.encryption = new RSA ( true );
 		// Bind buttons to the action listener
 		login.addActionListener ( this );
 		password.addActionListener ( this );

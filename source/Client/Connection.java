@@ -223,7 +223,7 @@ public class Connection implements Runnable {
 						try {
 							// Load in the audio file as a stream and play it
 							AudioInputStream audioInputStream = AudioSystem.getAudioInputStream (
-									this.getClass ().getResource ( "./assets/audio/New-Message.wav" )
+									this.getClass ().getResource ( "../assets/audio/New-Message.wav" )
 							);
 							Clip clip = AudioSystem.getClip ();
 							clip.open ( audioInputStream );
@@ -263,7 +263,7 @@ public class Connection implements Runnable {
 					try {
 						// Load in the audio file as a stream and play it
 						AudioInputStream audioInputStream = AudioSystem.getAudioInputStream (
-								this.getClass ().getResource ( "./assets/audio/New-Message.wav" )
+							this.getClass ().getResource ( "../assets/audio/New-Message.wav" )
 						);
 						Clip clip = AudioSystem.getClip ();
 						clip.open ( audioInputStream );

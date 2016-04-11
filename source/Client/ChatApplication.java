@@ -103,7 +103,7 @@ public class ChatApplication extends Display implements WindowListener {
 		try {
 			// Load in the audio file as a stream and play it
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream (
-					this.getClass ().getResource ( "./assets/audio/Opening.wav" )
+				this.getClass ().getResource ( "../assets/audio/Opening.wav" )
 			);
 			Clip clip = AudioSystem.getClip ();
 			clip.open ( audioInputStream );

@@ -1,3 +1,7 @@
+# Files
 *.class
-source/Graphic/*.class
-source/*.class
+.DS_Store
+
+# Directories
+/target
+/data
